@@ -1,3 +1,32 @@
+// main for all the files i uploaded
+
+// #include <wx/wx.h>
+// #include "MainFrame.h"
+// #include "FractalCalculations.h"
+
+// class MyApp : public wxApp {
+
+// public:
+
+// 	virtual bool OnInit();
+// 	virtual int OnExit() { return 0; }
+
+// };
+
+// IMPLEMENT_APP(MyApp);
+
+// bool MyApp::OnInit()
+// {
+// 	SetProcessDPIAware();
+// 	wxFrame* mainFrame = new MainFrame(NULL);
+// 	mainFrame->Show(true);
+// 	SetTopWindow(mainFrame);
+
+// 	return true;
+// }
+
+
+
 // Start of wxWidgets "Hello World" Program
 #include <wx/wx.h>
  
