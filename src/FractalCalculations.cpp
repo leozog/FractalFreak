@@ -1,4 +1,4 @@
-#include "../include/FractalCalculations.h"
+#include "FractalCalculations.h"
 
 FractalCalculations::FractalCalculations()
 {
@@ -7,7 +7,7 @@ FractalCalculations::FractalCalculations()
 
 	bitmap_width = 800;
 	bitmap_height = 600;
-	iterations_amount = /*2000000*/100000; // lags :( TODO speed optimization
+	iterations_amount = 2000000; // 100000; // lags :( TODO speed optimization
 	dimensions_amount = 2;
 	frames_amount = 100;
 
@@ -52,7 +52,6 @@ FractalCalculations::FractalCalculations()
 	base_frc[0].transformations[3] = std::make_shared<Transform_2D>(0.38, 0.0, 0.0, 0.38, -80.9017, -58.7785);
 	base_frc[0].transformations[4] = std::make_shared<Transform_2D>(0.38, 0.0, 0.0, 0.38, 30.9017, -95.1057);*/
 
-
 	// end fractal
 
 	// paprotka z zadania
@@ -79,7 +78,7 @@ FractalCalculations::FractalCalculations()
 	}
 }
 
-std::vector<float> FractalCalculations::calcProbabilities(const std::vector<std::shared_ptr<Transform_2D>>& transformations)
+std::vector<float> FractalCalculations::calcProbabilities(const std::vector<std::shared_ptr<Transform_2D>> &transformations)
 {
 	// sum determinants of all matrices
 	float det_sum = 0.;
@@ -107,10 +106,8 @@ void FractalCalculations::createBitmap()
 	for (auto transformation : work_frc.transformations)
 		transformations.push_back(std::dynamic_pointer_cast<Transform_2D>(transformation));
 
-
 	// calculate probabilities and sum them { transformations[0]->probability, transformations[0]->probability + transformations[1]->probability, ... }
 	std::vector<float> prob_sum = calcProbabilities(transformations);
-
 
 	// clear bitmap
 	frame.Create(bitmap_width, bitmap_height);
@@ -177,7 +174,6 @@ void FractalCalculations::createBitmap()
 		if (0 <= x_pixel && x_pixel < bitmap_width && 0 <= y_pixel && y_pixel < bitmap_height)
 			frame.SetRGB(x_pixel, y_pixel, red, green, blue);
 	}
-
 }
 
 void FractalCalculations::calcSize(int frc_num)
@@ -187,10 +183,8 @@ void FractalCalculations::calcSize(int frc_num)
 	for (auto transformation : base_frc[frc_num].transformations)
 		transformations.push_back(std::dynamic_pointer_cast<Transform_2D>(transformation));
 
-
 	// calculate probabilities
 	std::vector<float> prob_sum = calcProbabilities(transformations);
-
 
 	// find x/y offset and x/y stretch
 	float x = 0., y = 0., x_old = 0., y_old = 0.;
@@ -232,10 +226,14 @@ void FractalCalculations::calcSize(int frc_num)
 		}
 
 		// check if this pixel's coordinates aren't the approximate min/max x/y values
-		if (x < x_min) x_min = x;
-		if (x > x_max) x_max = x;
-		if (y < y_min) y_min = y;
-		if (y > y_max) y_max = y;
+		if (x < x_min)
+			x_min = x;
+		if (x > x_max)
+			x_max = x;
+		if (y < y_min)
+			y_min = y;
+		if (y > y_max)
+			y_max = y;
 	}
 
 	// set width/height of the fractal TODO make them a bit bigger maybe? so the fractal is a bit smaller when drawn and fits nicer into the bitmap
@@ -245,7 +243,6 @@ void FractalCalculations::calcSize(int frc_num)
 	// set x/y pixel offset
 	base_frc[frc_num].x_offset = static_cast<float>(bitmap_width) / 2. - (x_max - x_min) / 2. * static_cast<float>(bitmap_width) / base_frc[frc_num].stretch_x - x_min * static_cast<float>(bitmap_width) / base_frc[frc_num].stretch_x;
 	base_frc[frc_num].y_offset = static_cast<float>(bitmap_height) - (static_cast<float>(bitmap_height) / 2. - (y_max - y_min) / 2. * static_cast<float>(bitmap_height) / base_frc[frc_num].stretch_y - y_min * static_cast<float>(bitmap_height) / base_frc[frc_num].stretch_y);
-
 }
 
 void FractalCalculations::calcChange()
@@ -302,4 +299,3 @@ void FractalCalculations::updateTransformations()
 		std::dynamic_pointer_cast<Transform_2D>(work_frc.transformations[i])->vector[1] += std::dynamic_pointer_cast<Transform_2D>(change_frc.transformations[i])->vector[1];
 	}
 }
-

@@ -1,7 +1,6 @@
 #include "MainFrame.h"
 
-
-void MainFrame::playAnimation(wxCommandEvent& event)
+void MainFrame::playAnimation(wxCommandEvent &event)
 {
 	// init
 	frc_calc.calcSize(0);
@@ -36,4 +35,3 @@ void MainFrame::drawFrame()
 	// draw frame
 	dc.DrawBitmap(wxBitmap(frc_calc.frame), 0, 0);
 }
-

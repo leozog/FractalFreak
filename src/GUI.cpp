@@ -9,19 +9,18 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-GUIMainFrame::GUIMainFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
+GUIMainFrame::GUIMainFrame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &pos, const wxSize &size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
-	wxBoxSizer* mainSizer;
+	wxBoxSizer *mainSizer;
 	mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	wxBoxSizer* settingsSizer;
+	wxBoxSizer *settingsSizer;
 	settingsSizer = new wxBoxSizer(wxVERTICAL);
 
 	playAnimationButton = new wxButton(this, wxID_ANY, wxT("Animate fractals"), wxDefaultPosition, wxDefaultSize, 0);
 	settingsSizer->Add(playAnimationButton, 0, wxALL, 5);
-
 
 	mainSizer->Add(settingsSizer, 0, wxEXPAND, 5);
 
@@ -29,7 +28,6 @@ GUIMainFrame::GUIMainFrame(wxWindow* parent, wxWindowID id, const wxString& titl
 	drawPanel->SetBackgroundColour(wxColour(255, 255, 255));
 
 	mainSizer->Add(drawPanel, 1, wxEXPAND | wxALL, 5);
-
 
 	this->SetSizer(mainSizer);
 	this->Layout();
@@ -44,5 +42,4 @@ GUIMainFrame::~GUIMainFrame()
 {
 	// Disconnect Events
 	playAnimationButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::playAnimation), NULL, this);
-
 }

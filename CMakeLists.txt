@@ -10,12 +10,16 @@ set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")
 include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/lib/wxWidgets-3.2.2.1/include)
 file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
-set(wxWidgets_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../wxWidgets-3.2.2.1)
-set(wxWidgets_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../wxWidgets-3.2.2.1/lib/gcc_lib)
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
+set(wxWidgets_ROOT_DIR ${LIB_DIR}/wxWidgets-3.2.2.1)
+set(wxWidgets_LIB_DIR ${LIB_DIR}/wxWidgets-3.2.2.1/lib/gcc_lib)
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 if(wxWidgets_USE_FILE)
     include(${wxWidgets_USE_FILE})
 endif()
+
+include_directories(${LIB_DIR}/glm)
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCES})
 
