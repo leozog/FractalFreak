@@ -19,7 +19,10 @@ GUIMainFrame::GUIMainFrame(wxWindow *parent, wxWindowID id, const wxString &titl
 	wxBoxSizer *settingsSizer;
 	settingsSizer = new wxBoxSizer(wxVERTICAL);
 
-	playAnimationButton = new wxButton(this, wxID_ANY, wxT("Animate fractals"), wxDefaultPosition, wxDefaultSize, 0);
+	renderAnimationButton = new wxButton(this, wxID_ANY, wxT("render animation"), wxDefaultPosition, wxDefaultSize, 0);
+	settingsSizer->Add(renderAnimationButton, 0, wxALL, 5);
+
+	playAnimationButton = new wxButton(this, wxID_ANY, wxT("play animation"), wxDefaultPosition, wxDefaultSize, 0);
 	settingsSizer->Add(playAnimationButton, 0, wxALL, 5);
 
 	mainSizer->Add(settingsSizer, 0, wxEXPAND, 5);
@@ -35,11 +38,13 @@ GUIMainFrame::GUIMainFrame(wxWindow *parent, wxWindowID id, const wxString &titl
 	this->Centre(wxBOTH);
 
 	// Connect Events
+	renderAnimationButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::renderAnimation), NULL, this);
 	playAnimationButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::playAnimation), NULL, this);
 }
 
 GUIMainFrame::~GUIMainFrame()
 {
 	// Disconnect Events
+	renderAnimationButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::renderAnimation), NULL, this);
 	playAnimationButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::playAnimation), NULL, this);
 }

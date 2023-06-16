@@ -9,7 +9,11 @@
 // class implementing user interactions with the GUI
 class MainFrame : public GUIMainFrame
 {
+	Data &data;
+
 protected:
+	// renders the animation when renderAnimationButton is clicked
+	void renderAnimation(wxCommandEvent &event) override;
 	// plays the animation when playAnimationButton is clicked
 	void playAnimation(wxCommandEvent &event) override;
 
@@ -19,5 +23,5 @@ protected:
 	FractalCalculations frc_calc; // contains fractals and methods working on fractals
 
 public:
-	MainFrame(wxWindow *parent) : GUIMainFrame(parent) {}
+	MainFrame(wxWindow *parent, Data &data) : GUIMainFrame(parent), data{data} {}
 };

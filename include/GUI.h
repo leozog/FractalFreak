@@ -17,10 +17,12 @@ class GUIMainFrame : public wxFrame
 {
 private:
 protected:
+	wxButton *renderAnimationButton;
 	wxButton *playAnimationButton;
 	wxPanel *drawPanel;
 
 	// Virtual event handlers, override them in your derived class
+	virtual void renderAnimation(wxCommandEvent &event) { event.Skip(); }
 	virtual void playAnimation(wxCommandEvent &event) { event.Skip(); }
 
 public:

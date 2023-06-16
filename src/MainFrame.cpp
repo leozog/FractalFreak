@@ -1,18 +1,17 @@
 #include "MainFrame.h"
 
+void MainFrame::renderAnimation(wxCommandEvent &event)
+{
+	data.animation.render();
+	// TODO: podglad animacji podczas renderowania
+}
+
 void MainFrame::playAnimation(wxCommandEvent &event)
 {
-	// init
-	frc_calc.calcSize(0);
-	frc_calc.calcSize(1);
-	frc_calc.calcChange();
-
-	// drawing and calculating loop
-	for (int i = 0; i < frc_calc.get_frames_amount() + 1; i++)
+	// drawing loop
+	for (int i = 0; i < data.animation.n_frames(); i++)
 	{
-		frc_calc.createBitmap();
-		drawFrame();
-		frc_calc.updateTransformations();
+		drawFrame(data.animation.get_frame_x(i));
 	}
 }
 
