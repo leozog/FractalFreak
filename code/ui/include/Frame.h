@@ -2,7 +2,6 @@
 
 #include "projekt.h"
 #include "FractalControls.h"
-#include "FractalMath.h"
 
 class Frame : public MyFrame1
 {

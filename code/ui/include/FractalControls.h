@@ -1,7 +1,6 @@
 #pragma once
 
 #include "projekt.h"
-#include "FractalMath.h"
 
 // Represents a control set for specifying fractal parameters
 class ControlLine
@@ -197,7 +196,7 @@ public:
 	}
 
 	// Exportts all transformations into something more manageable
-	std::vector<Transformation> exportTransforms()
+	/* std::vector<Transformation> exportTransforms()
 	{
 		std::vector<Transformation> _toReturn;
 		for (int i = 0; i < _lines.size(); i++)
@@ -210,7 +209,7 @@ public:
 			}
 		}
 		return _toReturn;
-	}
+	} */
 
 protected:
 	wxSizer* _parentContainer;

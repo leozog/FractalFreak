@@ -1,4 +1,4 @@
-#include "FractalCalculations.h"
+#include "../include/FractalCalculations.h"
 
 FractalCalculations::FractalCalculations()
 {
