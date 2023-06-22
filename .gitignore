@@ -1,1 +1,6 @@
 /build/
+
+# make the VS mess transparent to the repo
+x64 
+.vs
+*vcxproj*
