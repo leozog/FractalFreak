@@ -32,6 +32,10 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "mutex": "cpp",
+        "stdexcept": "cpp",
+        "system_error": "cpp",
+        "xstring": "cpp"
     }
 }
