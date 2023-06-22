@@ -36,7 +36,9 @@ public:
 
 	}
 
+	// Creating copies of the controlline objects would cause a ton of issues in terms of wxwidgets
 	ControlLine(const ControlLine& other) = delete;
+	ControlLine & operator=(const ControlLine& other) = delete;
 
 
 	ControlLine(ControlLine&& other)
@@ -108,10 +110,10 @@ public:
 		if (_myDeleteButton)
 		{
 			_myDeleteButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame1::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
-			_myDeleteButton->Hide(); // TODO: Button garbage collection (wtf?)
+			_myDeleteButton->Hide(); // TODO: Button garbage collection (help me God)
 		}
 
-		for (int i = 0; i < _myInputs.size(); i++) // TODO: Update this to N dimensions
+		for (int i = 0; i < _myInputs.size(); i++)
 		{
 			_myInputs[i]->Destroy();
 		}
@@ -194,6 +196,7 @@ public:
 		/// TODO
 	}
 
+	// Exportts all transformations into something more manageable
 	std::vector<Transformation> exportTransforms()
 	{
 		std::vector<Transformation> _toReturn;
