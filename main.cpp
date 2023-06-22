@@ -1,6 +1,6 @@
 #include <wx/wx.h>
-#include "projekt.h"
-#include "Frame.h"
+#include "ui/include/projekt.h"
+#include "ui/include/Frame.h"
 
 class MyApp : public wxApp {
 

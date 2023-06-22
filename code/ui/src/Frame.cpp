@@ -1,4 +1,4 @@
-#include "Frame.h"
+#include "../include/Frame.h"
 
 
 Frame::Frame(wxWindow* parent) : MyFrame1(parent)
