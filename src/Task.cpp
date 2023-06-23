@@ -29,10 +29,9 @@ Task_list::~Task_list()
     clear();
 }
 
-template <typename T>
-void Task_list::add(const T &tsk)
+void Task_list::add(std::unique_ptr<Task> tsk)
 {
-    tasks.push_back(std::make_unique<T>(tsk));
+    tasks.push_back(tsk);
 }
 
 void Task_list::clear()

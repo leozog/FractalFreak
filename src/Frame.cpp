@@ -1,16 +1,25 @@
 #include "Frame.h"
 
-Frame::Frame(const FractalGenerator &fractal, const std::unique_ptr<FractalParameters> param, uint32_t W, uint32_t H) : fractal{fractal}, param{param}, img{W, H}
+Frame::Frame(
+    const std::unique_ptr<FractalParameters> param,
+    const FractalGenerator::Points &points_generator,
+    const FractalGenerator::Pixels &pixels_generator,
+    // const std::vector<&PostProcess> &post_process_stack;
+    uint32_t W, uint32_t H);
+: points_generator{points_generator}, pixels_generator{pixels_generator}, param{param}, color{W, H}, W{W}, H{H}
 {
 }
 
 void Frame::process() override
 {
-    point.calculate(param, img);
-    pixel.render(point, img, )
+    std::vector<std::unique_ptr<Point>> points = points_generator.calculate(param);
+    wxImage depth(W, H);
+    pixels_generator.calculate(points, color, depth, W, H);
+    /*for (auto &pp : post_process_stack)
+        pp(color, depth);*/
 }
 
-const wxImage &Frame::get_img() const
+wxImage Frame::get_img() const
 {
     return color;
 }

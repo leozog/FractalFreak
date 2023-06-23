@@ -1,18 +1,20 @@
 #pragma once
+#include "FractalParameters.h"
+#include "Point.h"
 
 namespace FractalGenerator
 {
-    class Point
+    class Points
     {
     private:
     public:
-        virtual void calculate(const FractalParameters &param, wxImage &img);
+        virtual std::vector<std::unique_ptr<Point>> calculate(const std::unique_ptr<FractalParameters> &param) = 0;
     };
 
-    class Img
+    class Pixels
     {
     private:
     public:
-        virtual void calculate(wxImage &color, wxImage &depth);
+        virtual void calculate(std::vector<std::unique_ptr<Point>> &points, wxImage color, wxImage depth, uint32_t W, uint32_t H) = 0;
     };
 }

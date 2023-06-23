@@ -35,8 +35,9 @@ private:
 public:
     Task_list();
     ~Task_list();
+    void add(std::unique_ptr<Task> tsk);
     template <typename T>
-    void add(const T &tsk);
+    void add(const T &tsk) { add(std::make_unique<T>(tsk)); }
     void clear();
     const Task &operator[](size_t i) const;
     Task &operator[](size_t i);

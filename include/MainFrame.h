@@ -1,7 +1,8 @@
 #pragma once
 
 #include "GUI.h"
-#include "FractalCalculations.h"
+
+#include "AppData.h"
 
 // #include <wx/dcbuffer.h>
 // #include <wx/colordlg.h>
@@ -9,7 +10,7 @@
 // class implementing user interactions with the GUI
 class MainFrame : public GUIMainFrame
 {
-	Data &data;
+	AppData &data;
 
 protected:
 	// renders the animation when renderAnimationButton is clicked
@@ -23,5 +24,5 @@ protected:
 	FractalCalculations frc_calc; // contains fractals and methods working on fractals
 
 public:
-	MainFrame(wxWindow *parent, Data &data) : GUIMainFrame(parent), data{data} {}
+	MainFrame(wxWindow *parent, AppData &data) : GUIMainFrame(parent), data{data} {}
 };

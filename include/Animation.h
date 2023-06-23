@@ -1,24 +1,28 @@
 #pragma once
 #include "Task.h"
 #include "Frame.h"
-#include "Path.h"
+#include "AnimationPath.h"
+#include "FractalGenerator.h"
 
 class Animation
 {
-public:
-    const double fps;         // frames per second
-    const uint32_t n_frames;  // frames per second
-    const uint32_t n_threads; // number of threads used to render the animation
 private:
-    Tast_list frames;                // frames of the animation
-    const FractalGenerator &fractal; // class used to generate the frames
-    AnimationPath &path;             // path of animation describing the state of paramethers in every frame
+    Task_list frames;                                                 // frames of the animation
+    AnimationPath path;                                               // path of animation describing the state of parameters in every frame
+    const std::shared_ptr<FractalGenerator::Points> points_generator; // class used to generate the points of the fractal
+    const std::shared_ptr<FractalGenerator::Pixels> pixels_generator; // class used to generate the color and depth img from points
+    // const std::vector<std::shared_ptr<PostProcess>> post_process_stack; // post processing effects applied to img
 
 public:
-    Animation(double fps, uint32_t n_threads, Path path);
-    void render();
+    Animation(
+        AnimationPath path,
+        const std::shared_ptr<FractalGenerator::Points> points_generator,
+        const std::shared_ptr<FractalGenerator::Pixels> pixels_generator /*,
+         const std::vector<std::shared_ptr<PostProcess>> post_process_stack*/
+    );
+    void render(double fps, uint32_t n_threads);
 
-    wxImage *get_frame_latest() const; // returns latest ready frame
-    wxImage *get_frame_x() const;      // returns frame number x
+    wxImage get_frame_latest() const; // returns latest ready frame img
+    wxImage get_frame_x() const;      // returns frame img number x
 private:
 };

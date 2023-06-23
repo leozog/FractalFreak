@@ -1,9 +1,11 @@
 #include <wx/wx.h>
+
 #include "MainFrame.h"
+#include "AppData.h"
 
 class MyApp : public wxApp
 {
-    Data data;
+    AppData data;
 
 public:
     bool OnInit() override;
