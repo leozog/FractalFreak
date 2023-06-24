@@ -1,6 +1,7 @@
 #pragma once
 #include "Task.h"
 #include "FractalGenerator.h"
+#include "FractalPoint.h"
 // #include "PostProcess.h"
 
 class Frame : public Task

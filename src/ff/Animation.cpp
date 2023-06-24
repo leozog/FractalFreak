@@ -10,7 +10,7 @@ Animation::Animation(
     path.compile(); // Performs additional calculations after the whole path is assembled
 }
 
-void Animation::render(double fps, uint32_t n_threads)
+void Animation::render(double fps, uint32_t n_threads, uint32_t W, uint32_t H)
 {
     frames.clear();
     uint32_t n_frames = path.time() * fps;

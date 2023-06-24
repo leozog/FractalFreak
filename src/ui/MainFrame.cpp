@@ -2,8 +2,7 @@
 
 void MainFrame::renderAnimation(wxCommandEvent &event)
 {
-	data.animation.render();
-	// TODO: podglad animacji podczas renderowania
+	data.animation.render(30, 1, 640, 480); // fps, n_of_threads, W, H
 }
 
 void MainFrame::playAnimation(wxCommandEvent &event)
@@ -15,7 +14,7 @@ void MainFrame::playAnimation(wxCommandEvent &event)
 	}
 }
 
-void MainFrame::drawFrame()
+void MainFrame::drawFrame(wxImage img)
 {
 	// init
 	wxClientDC dc1(drawPanel);
@@ -32,5 +31,5 @@ void MainFrame::drawFrame()
 	dc.Clear();
 
 	// draw frame
-	dc.DrawBitmap(wxBitmap(frc_calc.frame), 0, 0);
+	dc.DrawBitmap(wxBitmap(img), 0, 0);
 }

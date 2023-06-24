@@ -1,11 +1,11 @@
 #include <wx/wx.h>
 
-#include "MainFrame.h"
+#include "UI/MainFrame.h"
 #include "AppData.h"
 
 class MyApp : public wxApp
 {
-    AppData data;
+    AppData data; // object in which entire application data is stored including Animation, AnimationPath etc.
 
 public:
     bool OnInit() override;

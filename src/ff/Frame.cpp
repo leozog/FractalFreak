@@ -12,9 +12,9 @@ Frame::Frame(
 
 void Frame::process() override
 {
-    std::vector<std::unique_ptr<Point>> points = points_generator.calculate(param);
+    std::vector<std::unique_ptr<FractalPoint>> points = points_generator.calculate(param);
     wxImage depth(W, H);
-    pixels_generator.calculate(points, color, depth, W, H);
+    pixels_generator.render(points, color, depth, W, H);
     /*for (auto &pp : post_process_stack)
         pp(color, depth);*/
 }

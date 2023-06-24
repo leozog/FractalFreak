@@ -21,8 +21,6 @@ protected:
 	// displays wxImage frame
 	void drawFrame();
 
-	FractalCalculations frc_calc; // contains fractals and methods working on fractals
-
 public:
 	MainFrame(wxWindow *parent, AppData &data) : GUIMainFrame(parent), data{data} {}
 };
