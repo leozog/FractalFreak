@@ -36,6 +36,21 @@
         "mutex": "cpp",
         "stdexcept": "cpp",
         "system_error": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "cmath": "cpp",
+        "ios": "cpp",
+        "iostream": "cpp",
+        "istream": "cpp",
+        "iterator": "cpp",
+        "ostream": "cpp",
+        "streambuf": "cpp",
+        "xfacet": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp",
+        "xlocinfo": "cpp",
+        "xlocnum": "cpp",
+        "typeindex": "cpp",
+        "shared_mutex": "cpp",
+        "condition_variable": "cpp"
     }
 }

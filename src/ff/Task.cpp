@@ -1,4 +1,6 @@
-#include "Task.h"
+#include "ff/Task.h"
+
+#include <iostream> //usunac
 
 Task::Task() : state{State::free}
 {
@@ -9,13 +11,19 @@ bool Task::is_ready() const
     return state == State::ready;
 }
 
-void Task::take()
+bool Task::is_taken() const
 {
-    mx.lock();
+    return state == State::taken;
+}
+
+void Task::take(uint8_t trd_id)
+{
+    mx.lock_shared();
     if (state != State::free)
         return;
     state = State::taken;
-    mx.unlock();
+    mx.unlock_shared();
+    std::cout << "trd_id=" + std::to_string(trd_id) + " taken\n";
     process();
     state = State::ready;
 }
@@ -29,25 +37,34 @@ Task_list::~Task_list()
     clear();
 }
 
-void Task_list::add(std::unique_ptr<Task> tsk)
-{
-    tasks.push_back(tsk);
-}
-
 void Task_list::clear()
 {
     stop = true;
-    for (auto &th : threads)
-        threads.join();
+    while (true)
+    {
+        bool running = false;
+        for (auto &tsk : tasks)
+        {
+            if (tsk->is_taken())
+                running = true;
+        }
+        if (!running)
+            break;
+    }
     tasks.clear();
     stop = false;
 }
 
-const Task &operator[](size_t i) const
+size_t Task_list::size() const
+{
+    return tasks.size();
+}
+
+const Task &Task_list::operator[](size_t i) const
 {
     return *tasks[i];
 }
-Task &operator[](size_t i)
+Task &Task_list::operator[](size_t i)
 {
     return *tasks[i];
 }
@@ -55,18 +72,23 @@ Task &operator[](size_t i)
 void Task_list::process(uint32_t n_threads)
 {
     for (int i = 0; i < n_threads; i++) // invoking the threads
-        threads.push_back(std::thread(&Task_list::take_tasks, &this));
-
-    for (auto &th : threads)
-        th.detach();
+    {
+        std::cout << "invoking thread " + std::to_string(i + 1) + " / " + std::to_string(n_threads) + " of " + std::to_string(std::thread::hardware_concurrency()) + " possible\n";
+        std::thread(&Task_list::take_tasks, this, i).detach();
+    }
 }
 
-void Task_list::take_tasks()
+void Task_list::take_tasks(uint8_t trd_id)
 {
-    for (auto *tsk : tasks)
+    std::cout << "trd_id=" + std::to_string(trd_id) + " running\n";
+    for (auto &tsk : tasks)
     {
         if (stop)
+        {
+            std::cout << "trd_id=" + std::to_string(trd_id) + " terminated\n";
             return;
-        tsk->take();
+        }
+        tsk->take(trd_id);
     }
+    std::cout << "trd_id=" + std::to_string(trd_id) + " finish\n";
 }

@@ -1,16 +1,24 @@
-#include "MainFrame.h"
+#include "ui/MainFrame.h"
 
 void MainFrame::renderAnimation(wxCommandEvent &event)
 {
-	data.animation.render(30, 1, 640, 480); // fps, n_of_threads, W, H
+	try
+	{
+		data.animation->render(250, 8, 640, 480); // fps, n_of_threads, W, H
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 }
 
 void MainFrame::playAnimation(wxCommandEvent &event)
 {
 	// drawing loop
-	for (int i = 0; i < data.animation.n_frames(); i++)
+	std::cout << data.animation->n_frames_ready();
+	for (int i = 0; i < data.animation->n_frames(); i++)
 	{
-		drawFrame(data.animation.get_frame_x(i));
+		drawFrame(data.animation->get_frame_x(i));
 	}
 }
 

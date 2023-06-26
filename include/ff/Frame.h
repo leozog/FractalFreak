@@ -1,25 +1,27 @@
 #pragma once
-#include "Task.h"
-#include "FractalGenerator.h"
-#include "FractalPoint.h"
+#include "ff/Task.h"
+#include "ff/FractalGenerator.h"
+#include "ff/FractalPoint.h"
 // #include "PostProcess.h"
+
+#include <wx/image.h>
 
 class Frame : public Task
 {
 private:
     const uint32_t W, H;
     const std::unique_ptr<FractalParameters> param;
-    const FractalGenerator::Points &points_generator;
-    const FractalGenerator::Pixels &pixels_generator;
+    const std::unique_ptr<const FractalGenerator::Points> &points_generator;
+    const std::unique_ptr<const FractalGenerator::Pixels> &pixels_generator;
     // const std::vector<&PostProcess> &post_process_stack;
 
     wxImage color;
 
 public:
     Frame(
-        const std::unique_ptr<FractalParameters> param,
-        const FractalGenerator::Points &points_generator,
-        const FractalGenerator::Pixels &pixels_generator,
+        std::unique_ptr<FractalParameters> &&param,
+        const std::unique_ptr<const FractalGenerator::Points> &points_generator,
+        const std::unique_ptr<const FractalGenerator::Pixels> &pixels_generator,
         // const std::vector<&PostProcess> &post_process_stack;
         uint32_t W, uint32_t H);
     void process() override; // renders the frame

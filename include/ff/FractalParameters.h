@@ -1,11 +1,13 @@
 #pragma once
+#include <memory>
 
 class FractalParameters
 {
 private:
 public:
-    virtual void add(const FractalParameters &b) = 0;
-    virtual void mul(const double b) = 0;
+    virtual std::unique_ptr<FractalParameters> copy() const { return 0; };
+    virtual void add(const FractalParameters &b){};
+    virtual void mul(const double b){};
 };
 
 std::unique_ptr<FractalParameters> operator*(const std::unique_ptr<FractalParameters> &a, const double b);

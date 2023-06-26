@@ -4,7 +4,7 @@
 
 #include "AppData.h"
 
-// #include <wx/dcbuffer.h>
+#include <wx/dcbuffer.h>
 // #include <wx/colordlg.h>
 
 // class implementing user interactions with the GUI
@@ -19,7 +19,7 @@ protected:
 	void playAnimation(wxCommandEvent &event) override;
 
 	// displays wxImage frame
-	void drawFrame();
+	void drawFrame(wxImage img);
 
 public:
 	MainFrame(wxWindow *parent, AppData &data) : GUIMainFrame(parent), data{data} {}

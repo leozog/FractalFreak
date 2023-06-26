@@ -1,6 +1,6 @@
 #include <wx/wx.h>
 
-#include "UI/MainFrame.h"
+#include "ui/MainFrame.h"
 #include "AppData.h"
 
 class MyApp : public wxApp

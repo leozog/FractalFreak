@@ -1,15 +1,23 @@
-#include "AnimationPath.h"
+#include "ff/AnimationPath.h"
 
-AnimationPath::Stage::Stage(const std::unique_ptr<FractalParameters> param, const double time) : param{parram}, time{time}
+AnimationPath::Stage::Stage(std::unique_ptr<FractalParameters> &&param, const double time) : param{std::move(param)}, time{time}
 {
 }
 
-void AnimationPath::add(std::unique_ptr<FractalParameters> x, double dtime)
+AnimationPath::Stage::Stage(const Stage &other) : param{other.param->copy()}, time{other.time}
 {
-    if (stages.size() = 0)
-        stages.push_back(x, dtime);
+}
+
+AnimationPath::Stage::Stage(Stage &&other) : param{std::move(other.param)}, time{other.time}
+{
+}
+
+void AnimationPath::add(std::unique_ptr<FractalParameters> &&x, double dtime)
+{
+    if (stages.size() == 0)
+        stages.push_back(Stage(std::move(x), dtime));
     else
-        stages.push_back(x, stages.back().time + dtime);
+        stages.push_back(Stage(std::move(x), stages.back().time + dtime));
 }
 
 double AnimationPath::time() const
@@ -31,15 +39,15 @@ std::unique_ptr<FractalParameters> AnimationPath::get_param(double time) const
         if (time <= stages[i + 1].time)
             return lerp(stages[i].param, stages[i + 1].param, time / (stages[i + 1].time - stages[i].time));
     }
-    return std::make_unique<FractalParameters>(*(stages.back().param));
+    return stages.back().param->copy();
 }
 
-std::unique_ptr<FractalParameters> AnimationPath::lerp(const std::unique_ptr<FractalParameters> &a, const std::unique_ptr<FractalParameters> &b, double t)
+std::unique_ptr<FractalParameters> AnimationPath::lerp(const std::unique_ptr<FractalParameters> &a, const std::unique_ptr<FractalParameters> &b, double t) const
 {
     if (t <= 0)
-        return std::make_unique<FractalParameters>(*a);
+        return a->copy();
     else if (t >= 1)
-        return std::make_unique<FractalParameters>(*b);
+        return b->copy();
     else
         return a + t * (b - a);
 }

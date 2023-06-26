@@ -1,12 +1,9 @@
 #pragma once
 #include <cstdlib>
+#include <cstdint>
 
-int32_t rand_i(int32_t low, int32_t high)
+namespace Random
 {
-    return rand() % (high - low) + low;
-}
-
-double rand_d(double low, double high)
-{
-    return ((double)rand() * (high - low)) / (double)RAND_MAX + low;
+    int32_t rand_i(int32_t low, int32_t high);
+    double rand_d(double low, double high);
 }
