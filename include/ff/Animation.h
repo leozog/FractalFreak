@@ -24,10 +24,10 @@ public:
         std::unique_ptr<FractalGenerator::Pixels> &&pixels_generator /*,
         const std::vector<std::unique_ptr<PostProcess>> post_process_stack*/
     );
-    void render(double fps, uint32_t n_threads, uint32_t W, uint32_t H);
+    void render(double fps, int32_t n_threads, uint32_t W, uint32_t H);
 
-    wxImage get_frame_latest() const;      // returns latest ready frame img
-    wxImage get_frame_x(uint32_t x) const; // returns frame img number x
+    std::shared_ptr<wxImage> get_frame_latest() const;      // returns latest ready frame img
+    std::shared_ptr<wxImage> get_frame_x(uint32_t x) const; // returns frame img number x
 
     uint32_t n_frames() const;
     uint32_t n_frames_ready() const;

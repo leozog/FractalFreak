@@ -19,7 +19,7 @@ protected:
 	void playAnimation(wxCommandEvent &event) override;
 
 	// displays wxImage frame
-	void drawFrame(wxImage img);
+	void drawFrame(std::shared_ptr<wxImage> img);
 
 public:
 	MainFrame(wxWindow *parent, AppData &data) : GUIMainFrame(parent), data{data} {}

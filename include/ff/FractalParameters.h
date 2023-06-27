@@ -6,7 +6,7 @@ class FractalParameters
 private:
 public:
     virtual std::unique_ptr<FractalParameters> copy() const { return 0; };
-    virtual void add(const FractalParameters &b){};
+    virtual void add(FractalParameters &b){};
     virtual void mul(const double b){};
 };
 

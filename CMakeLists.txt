@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall")
 
-include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/lib/wxWidgets-3.2.2.1/include)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/ff/*.cpp ${PROJECT_SOURCE_DIR}/src/ui/*.cpp)
 
 set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../lib)

@@ -31,11 +31,11 @@ struct AffineTransformation
 // 2D affine transformation
 struct Transform_2D : public AffineTransformation
 {
-    Transform_2D(float a = 0, float b = 0, float c = 0, float d = 0, float dx = 0, float dy = 0) : matrix({a, b}, {c, d}), vector(dx, dy) {}
+    Transform_2D(float a = 0, float b = 0, float c = 0, float d = 0, float dx = 0, float dy = 0) : matrix(a, c, b, d), vector(dx, dy) {}
 
     // std::unique_ptr<AffineTransformation> copy() { return std::make_unique<Transform_2D>(*this); }
 
-    glm::mat2 matrix; // transformation matrix: {{A, B}, {C, D}}
+    glm::mat2 matrix; // transformation matrix: {{A, C}, {B, D}}
     glm::vec2 vector; // translation vector: {dx, dy} or {E, F}
 };
 
@@ -54,9 +54,13 @@ namespace simple_fractal // made by Ola!
         {
             return std::make_unique<simple_fractal::Parameters>(*this);
         }
-        void add(const FractalParameters &b) override
+        void add(FractalParameters &b) override
         {
-            const simple_fractal::Parameters &B = dynamic_cast<const simple_fractal::Parameters &>(b);
+            simple_fractal::Parameters &B = dynamic_cast<simple_fractal::Parameters &>(b);
+            while (B.transformations.size() > transformations.size())
+                transformations.push_back(Transform_2D(0, 0, 0, 0, 0, 0));
+            while (B.transformations.size() < transformations.size())
+                B.transformations.push_back(Transform_2D(0, 0, 0, 0, 0, 0));
             for (int i = 0; i < transformations.size(); i++)
             {
                 // dynamic_cast<Transform_2D &>(*transformations[i]).matrix[0][0] += dynamic_cast<Transform_2D &>(*(B.transformations[i])).matrix[0][0];
@@ -96,25 +100,33 @@ namespace simple_fractal // made by Ola!
             std::vector<float> prob_sum = calcProbabilities(transformations);
 
             // calculate points
-            float x_pixel, y_pixel, random_val, x = 0., y = 0., x_old = 0., y_old = 0.;
-
+            glm::vec2 p(0., 0.);
             /* randomize a value and pick a transformation to apply based on it (with accordance to the probabilities calculated earlier)
              * then position and draw the pixel with a color based on the chosen transformation
              */
             std::vector<std::unique_ptr<FractalPoint>> points;
             points.reserve(iterations_amount);
-            for (int i = 0; i < iterations_amount; i++)
+            for (int i = 0; i < 100; i++)
             {
-                random_val = Random::rand_d(0., 1.); // random value from 0. to 1.
-                x_old = x;
-                y_old = y;
+                double random_val = Random::rand_d(0., 1.); // random value from 0. to 1.
                 for (int j = 0; j < prob_sum.size(); j++)
                 {
                     if (random_val <= prob_sum[j])
                     {
-                        x = transformations[j].matrix[0][0] * x_old + transformations[j].matrix[0][1] * y_old + transformations[j].vector[0];
-                        y = transformations[j].matrix[1][0] * x_old + transformations[j].matrix[1][1] * y_old + transformations[j].vector[1];
-                        points.push_back(std::make_unique<simple_fractal::Point>(x, y, 0, j));
+                        p = transformations[j].matrix * p + transformations[j].vector;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < iterations_amount; i++)
+            {
+                double random_val = Random::rand_d(0., 1.); // random value from 0. to 1.
+                for (int j = 0; j < prob_sum.size(); j++)
+                {
+                    if (random_val <= prob_sum[j])
+                    {
+                        p = transformations[j].matrix * p + transformations[j].vector;
+                        points.push_back(std::make_unique<simple_fractal::Point>(p.x, p.y, 0, j));
                         break;
                     }
                 }
@@ -208,6 +220,18 @@ namespace simple_fractal // made by Ola!
                 if (0 <= screenX && screenX < W && 0 <= screenY && screenY < H)
                     color.SetRGB(screenX, screenY, red, green, blue);
             }
+        }
+
+    private:
+        void setRGB(wxImage &img, int screenX, int screenY, unsigned char red, unsigned char green, unsigned char blue)
+        {
+            unsigned char *p = img.GetData();
+            uint32_t W = img.GetWidth();
+            uint32_t H = img.GetHeight();
+            p += screenX + screenY * W;
+            p[0] = red;
+            p[1] = green;
+            p[2] = blue;
         }
     };
 }

@@ -22,10 +22,7 @@ void AnimationPath::add(std::unique_ptr<FractalParameters> &&x, double dtime)
 
 double AnimationPath::time() const
 {
-    double total_time = 0;
-    for (auto &s : stages)
-        total_time += s.time;
-    return total_time;
+    return stages.back().time;
 }
 
 void AnimationPath::compile()
@@ -37,7 +34,7 @@ std::unique_ptr<FractalParameters> AnimationPath::get_param(double time) const
     for (int i = 0; i < stages.size() - 1; i++)
     {
         if (time <= stages[i + 1].time)
-            return lerp(stages[i].param, stages[i + 1].param, time / (stages[i + 1].time - stages[i].time));
+            return lerp(stages[i].param, stages[i + 1].param, (time - stages[i].time) / (stages[i + 1].time - stages[i].time));
     }
     return stages.back().param->copy();
 }

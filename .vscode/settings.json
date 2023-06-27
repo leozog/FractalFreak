@@ -51,6 +51,11 @@
         "xlocnum": "cpp",
         "typeindex": "cpp",
         "shared_mutex": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "bit": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "ctime": "cpp",
+        "stop_token": "cpp"
     }
 }

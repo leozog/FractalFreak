@@ -11,7 +11,7 @@ Animation::Animation(
     path->compile(); // Performs additional calculations after the whole path is assembled
 }
 
-void Animation::render(double fps, uint32_t n_threads, uint32_t W, uint32_t H)
+void Animation::render(double fps, int32_t n_threads, uint32_t W, uint32_t H)
 {
     frames.clear();
     uint32_t n_frames = path->time() * fps;
@@ -26,21 +26,21 @@ void Animation::render(double fps, uint32_t n_threads, uint32_t W, uint32_t H)
     frames.process(n_threads); // the actuall calculation of frames (async)
 }
 
-wxImage Animation::get_frame_latest() const
+std::shared_ptr<wxImage> Animation::get_frame_latest() const
 {
     for (int i = frames.size() - 1; i >= 0; i--)
     {
         if (frames[i].is_ready())
             return dynamic_cast<const Frame &>(frames[i]).get_img();
     }
-    return wxImage(16, 16); // placeholder
+    return std::make_shared<wxImage>(16, 16); // placeholder
 }
 
-wxImage Animation::get_frame_x(uint32_t x) const
+std::shared_ptr<wxImage> Animation::get_frame_x(uint32_t x) const
 {
     if (frames[x].is_ready())
         return dynamic_cast<const Frame &>(frames[x]).get_img();
-    return wxImage(16, 16);
+    return std::make_shared<wxImage>(16, 16);
 }
 
 uint32_t Animation::n_frames() const

@@ -41,7 +41,7 @@ public:
     size_t size() const;
     const Task &operator[](size_t i) const;
     Task &operator[](size_t i);
-    void process(uint32_t n_threads);
+    void process(int32_t n_threads);
 
 private:
     void take_tasks(uint8_t trd_id);

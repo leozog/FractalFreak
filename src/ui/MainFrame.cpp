@@ -4,7 +4,7 @@ void MainFrame::renderAnimation(wxCommandEvent &event)
 {
 	try
 	{
-		data.animation->render(250, 8, 640, 480); // fps, n_of_threads, W, H
+		data.animation->render(60, -1, 640, 480); // fps, n_of_threads, W, H
 	}
 	catch (const std::exception &e)
 	{
@@ -22,7 +22,7 @@ void MainFrame::playAnimation(wxCommandEvent &event)
 	}
 }
 
-void MainFrame::drawFrame(wxImage img)
+void MainFrame::drawFrame(std::shared_ptr<wxImage> img)
 {
 	// init
 	wxClientDC dc1(drawPanel);
@@ -35,9 +35,9 @@ void MainFrame::drawFrame(wxImage img)
 	dc.SetClippingRegion(0, 0, width, height);
 
 	// draw white bg
-	dc.SetBackground(*wxWHITE_BRUSH);
+	dc.SetBackground(*wxBLACK_BRUSH);
 	dc.Clear();
 
 	// draw frame
-	dc.DrawBitmap(wxBitmap(img), 0, 0);
+	dc.DrawBitmap(wxBitmap(*img), 0, 0);
 }
