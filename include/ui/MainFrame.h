@@ -1,26 +1,34 @@
 #pragma once
 
-#include "GUI.h"
-
+#include "BaseFrame.h"
+#include "FractalControls.h"
 #include "AppData.h"
 
-#include <wx/dcbuffer.h>
-// #include <wx/colordlg.h>
-
-// class implementing user interactions with the GUI
-class MainFrame : public GUIMainFrame
+class MainFrame : public MyFrame1
 {
-	AppData &data;
+private:
 
 protected:
-	// renders the animation when renderAnimationButton is clicked
-	void renderAnimation(wxCommandEvent &event) override;
-	// plays the animation when playAnimationButton is clicked
-	void playAnimation(wxCommandEvent &event) override;
 
-	// displays wxImage frame
-	void drawFrame(wxImage img);
+	void fractal_left_button(wxCommandEvent& event) override;
+	void fractal_right_button(wxCommandEvent& event) override;
+	void on_dimension_pick(wxCommandEvent& event) override;
+	void onAnimateButton(wxCommandEvent& event) override;
+
+	int _currentFractal;
+
+	std::vector<ControlSet> _fractalControls;
+
+	AppData& data;
 
 public:
-	MainFrame(wxWindow *parent, AppData &data) : GUIMainFrame(parent), data{data} {}
+
+	MainFrame(wxWindow* parent, AppData & _dataRef);
+	~MainFrame() {};
+
+	void onTransformDelete(wxCommandEvent& event) override;
+	void onTransformAdd(wxCommandEvent& event) override;
+
+	
+
 };

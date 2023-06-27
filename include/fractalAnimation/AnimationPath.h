@@ -1,5 +1,5 @@
 #pragma once
-#include "ff/FractalParameters.h"
+#include "fractalAnimation/FractalParameters.h"
 
 #include <vector>
 #include <memory>

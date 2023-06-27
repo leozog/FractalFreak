@@ -1,4 +1,4 @@
-#include "ff/FractalParameters.h"
+#include "fractalAnimation/FractalParameters.h"
 
 std::unique_ptr<FractalParameters> operator*(const std::unique_ptr<FractalParameters> &a, const double b)
 {

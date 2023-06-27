@@ -1,7 +1,7 @@
 #pragma once
-#include "ff/Animation.h"
-#include "ff/FractalParameters.h"
-#include "ff/FractalGenerator.h"
+#include "fractalAnimation/Animation.h"
+#include "fractalAnimation/FractalParameters.h"
+#include "fractalAnimation/FractalGenerator.h"
 #include "FractalsDefinitions.h"
 
 class AppData

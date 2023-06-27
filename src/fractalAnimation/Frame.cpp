@@ -1,4 +1,4 @@
-#include "ff/Frame.h"
+#include "fractalAnimation/Frame.h"
 
 Frame::Frame(
     std::unique_ptr<FractalParameters> &&param,

@@ -1,2 +1,2 @@
 #pragma once
-#include "fd/simple_fractal.h"
+#include "fractalDefinitions/simple_fractal.h"

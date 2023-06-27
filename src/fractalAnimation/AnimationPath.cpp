@@ -1,4 +1,4 @@
-#include "ff/AnimationPath.h"
+#include "fractalAnimation/AnimationPath.h"
 
 AnimationPath::Stage::Stage(std::unique_ptr<FractalParameters> &&param, const double time) : param{std::move(param)}, time{time}
 {

@@ -1,6 +1,7 @@
-#include "ff/Task.h"
+#include "fractalAnimation/Task.h"
 
 #include <iostream> //usunac
+#include <string>
 
 Task::Task() : state{State::free}
 {

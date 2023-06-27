@@ -1,6 +1,6 @@
 #pragma once
-#include "ff/FractalParameters.h"
-#include "ff/FractalPoint.h"
+#include "fractalAnimation/FractalParameters.h"
+#include "fractalAnimation/FractalPoint.h"
 
 #include <wx/image.h>
 

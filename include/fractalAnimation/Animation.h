@@ -1,8 +1,8 @@
 #pragma once
-#include "ff/Task.h"
-#include "ff/Frame.h"
-#include "ff/AnimationPath.h"
-#include "ff/FractalGenerator.h"
+#include "fractalAnimation/Task.h"
+#include "fractalAnimation/Frame.h"
+#include "fractalAnimation/AnimationPath.h"
+#include "fractalAnimation/FractalGenerator.h"
 
 #include <wx/image.h>
 

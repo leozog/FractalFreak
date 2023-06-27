@@ -1,8 +1,8 @@
 #pragma once
-#include "ff/FractalParameters.h"
-#include "ff/FractalGenerator.h"
-#include "ff/FractalPoint.h"
-#include "ff/Random.h"
+#include "fractalAnimation/FractalParameters.h"
+#include "fractalAnimation/FractalGenerator.h"
+#include "fractalAnimation/FractalPoint.h"
+#include "fractalAnimation/Random.h"
 
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"

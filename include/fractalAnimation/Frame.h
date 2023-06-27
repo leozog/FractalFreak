@@ -1,7 +1,7 @@
 #pragma once
-#include "ff/Task.h"
-#include "ff/FractalGenerator.h"
-#include "ff/FractalPoint.h"
+#include "fractalAnimation/Task.h"
+#include "fractalAnimation/FractalGenerator.h"
+#include "fractalAnimation/FractalPoint.h"
 // #include "PostProcess.h"
 
 #include <wx/image.h>
