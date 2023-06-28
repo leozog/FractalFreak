@@ -108,16 +108,15 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 
-	m_fractalPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 640,480 ), wxTAB_TRAVERSAL );
-	m_fractalPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+	bPanelSizer = new wxBoxSizer(wxVERTICAL);
 
-	bSizer1->Add( m_fractalPanel, 1, wxEXPAND | wxALL, 5 );
+	m_fractalPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(640, 480), wxTAB_TRAVERSAL);
+	m_fractalPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENU));
 
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	bPanelSizer->Add(m_fractalPanel, 1, wxEXPAND | wxALL, 5);
+	bSizer1->Add(bPanelSizer, 1, wxEXPAND | wxALL, 5 );
 
 
-	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 
 
 	this->SetSizer( bSizer1 );

@@ -55,6 +55,7 @@ class MyFrame1 : public wxFrame
 		wxPanel* m_fractalPanel;
 		wxMenuBar* m_menubar1;
 		wxMenu* m_filemenu;
+		wxBoxSizer* bPanelSizer;
 		wxGauge* m_progress;
 
 		// Virtual event handlers, override them in your derived class

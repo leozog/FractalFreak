@@ -121,9 +121,18 @@ void MainFrame::onGenerateButton(wxCommandEvent& event) {
 		Od tego momentu to nie mój problem (do czasu wystawienia oceny) -- generowanie fraktali
 	*/
 
+	int width, height;
+	m_widthtxt->GetValue().ToInt(&width);
+	m_heighttxt->GetValue().ToInt(&height);
+
+	m_fractalPanel->SetSize(width, height);
+	bPanelSizer->SetMinSize(width, height);
+	this->Layout();
+	this->Fit();
+
 	try
 	{
-		data.animation->render(60, -1, 640, 480); // fps, n_of_threads, W, H
+		data.animation->render(60, -1, width, height); // fps, n_of_threads, W, H
 	}
 	catch (const std::exception& e)
 	{
