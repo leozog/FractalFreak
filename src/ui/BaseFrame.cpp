@@ -141,6 +141,9 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	this->SetMenuBar( m_menubar1 );
 
+	m_progress = new wxGauge( this, wxID_ANY, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL );
+	m_progress->SetValue( 0 );
+	bSizer7->Add( m_progress, 0, wxALL|wxEXPAND, 5 );
 
 	this->Centre( wxBOTH );
 

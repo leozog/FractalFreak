@@ -25,6 +25,7 @@
 #include <wx/panel.h>
 #include <wx/menu.h>
 #include <wx/frame.h>
+#include <wx/gauge.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +55,7 @@ class MyFrame1 : public wxFrame
 		wxPanel* m_fractalPanel;
 		wxMenuBar* m_menubar1;
 		wxMenu* m_filemenu;
+		wxGauge* m_progress;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void onCloseEvent( wxCloseEvent& event ) { event.Skip(); }
