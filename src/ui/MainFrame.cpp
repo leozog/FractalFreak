@@ -17,20 +17,18 @@ void MainFrame::onTransformDelete(wxCommandEvent &event)
 void MainFrame::onTransformAdd(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].AddLine();
-	event.Skip();
 }
 
 void MainFrame::fractal_left_button(wxCommandEvent &event)
 {
 	if (_currentFractal > 0)
 	{
-		_fractalControls[_currentFractal].Hide();
+		_fractalControls[_currentFractal].Hide(); // Trzeba przesunąć wskaźnik w tył
 		_currentFractal--;
 		_fractalControls[_currentFractal].Show();
 		m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
 		m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
 	}
-	event.Skip();
 }
 
 void MainFrame::fractal_right_button(wxCommandEvent &event)
@@ -39,13 +37,13 @@ void MainFrame::fractal_right_button(wxCommandEvent &event)
 
 	if ((_currentFractal + 1) == _fractalControls.size())
 	{
-		_fractalControls.push_back(ControlSet(bTransformHolder));
+		_fractalControls.push_back(ControlSet(bTransformHolder)); // Trzeba dodać nowy fraktal
 		_currentFractal++;
 	}
 	else
 	{
 		_currentFractal++;
-		_fractalControls[_currentFractal].Show();
+		_fractalControls[_currentFractal].Show(); // Jeżeli istnieje to pokaż istniejący
 	}
 	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
 	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
@@ -124,7 +122,6 @@ void MainFrame::onGenerateButton(wxCommandEvent &event)
 			if (i != 0)
 			{
 				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), _fractalControls[i - 1]._framesToNext);
-
 			}
 			else
 			{
