@@ -6,6 +6,9 @@
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 #include "AppData.h"
+#include <wx/filedlg.h>
+#include <fstream>
+#include<sstream>
 
 class MainFrame : public MyFrame1
 {
@@ -17,6 +20,7 @@ protected:
 	void on_dimension_pick(wxCommandEvent& event) override;
 	void onAnimateButton(wxCommandEvent& event) override;
 	void onGenerateButton(wxCommandEvent& event) override;
+	void onFileLoad(wxCommandEvent& event) override;
 
 	// displays wxImage frame
 	void drawFrame(wxImage img);
@@ -35,6 +39,8 @@ public:
 	void onTransformDelete(wxCommandEvent& event) override;
 	void onTransformAdd(wxCommandEvent& event) override;
 	void drawFrame(std::shared_ptr<wxImage> img);
+
+
 
 	
 

@@ -68,6 +68,7 @@ class MyFrame1 : public wxFrame
 		virtual void onAnimateButton( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onWidthText( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onHeightText( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onFileLoad(wxCommandEvent& event) { event.Skip(); }
 
 
 	public:

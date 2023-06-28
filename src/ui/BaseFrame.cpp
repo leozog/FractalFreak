@@ -158,6 +158,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_beginAnimation->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onAnimateButton ), NULL, this );
 	m_widthtxt->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onWidthText ), NULL, this );
 	m_heighttxt->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onHeightText ), NULL, this );
+	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyFrame1::onFileLoad), this, m_menu_load->GetId());
 }
 
 MyFrame1::~MyFrame1()

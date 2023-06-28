@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseFrame.h"
+#include "fd/simple_fractal.h"
 
 // Represents a control set for specifying fractal parameters
 class ControlLine
@@ -10,7 +11,7 @@ class ControlLine
 
 public:
 	// Construct a new line set to add to the parent container
-	ControlLine(wxSizer * container, int dimensions = 2) : _parentContainer(container), _dimensions(dimensions)
+	ControlLine(wxSizer * container, int dimensions = 2, bool doNotShow = false) : _parentContainer(container), _dimensions(dimensions)
 	{
 		// Create a sizer to store buttons in
 		_myLineSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -30,6 +31,8 @@ public:
 		}
 
 		_parentContainer->Layout();
+
+		_myLineSizer->Show(!doNotShow);
 
 		_myDeleteButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame1::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
 
@@ -144,7 +147,7 @@ public:
 	// Construct a new Control Set, it requires a container to write to and can be set to not render when created
 	ControlSet(wxSizer * container, int dimensions = 2, bool startHidden = false) : _parentContainer(container), _hidden(startHidden), _dimensions(dimensions)
 	{
-
+		_framesToNext = 10;
 	}
 
 	// Show the entire control set again
@@ -172,7 +175,7 @@ public:
 	// Add a new line to the mix
 	void AddLine()
 	{
-		_lines.push_back(ControlLine(_parentContainer, _dimensions));
+		_lines.push_back(ControlLine(_parentContainer, _dimensions, _hidden));
 		_parentContainer->GetContainingWindow()->Layout();
 	}
 
@@ -196,24 +199,40 @@ public:
 	}
 
 	// Exportts all transformations into something more manageable
-	/* std::vector<Transformation> exportTransforms()
+	std::vector<Transform_2D> exportTransforms2D()
 	{
-		std::vector<Transformation> _toReturn;
+		std::vector<Transform_2D> _toReturn;
 		for (int i = 0; i < _lines.size(); i++)
 		{
 			const int currentDimension = _lines[i]._dimensions;
-			_toReturn.push_back(Transformation(_lines[i]._dimensions));
-			for (int j = 0; j < currentDimension * (currentDimension + 1); j++)
-			{
-				_lines[i]._myInputs[j]->GetValue().ToDouble(_toReturn[i]._coefficients + j); // For the love of all stop-signs in the Galaxy, cease and desist
-			}
+			double a, b, c, d, e, f;
+			_lines[i]._myInputs[0]->GetValue().ToCDouble(&a);
+			_lines[i]._myInputs[1]->GetValue().ToCDouble(&b);
+			_lines[i]._myInputs[2]->GetValue().ToCDouble(&c);
+			_lines[i]._myInputs[3]->GetValue().ToCDouble(&d);
+			_lines[i]._myInputs[4]->GetValue().ToCDouble(&e);
+			_lines[i]._myInputs[5]->GetValue().ToCDouble(&f);
+				
+			_toReturn.push_back(Transform_2D(a, b, c, d, e, f));
 		}
 		return _toReturn;
-	} */
+	} 
+
+	// Ustawia tekst w œrodku linii, do u¿ycia przy importowaniu
+	void setLine(std::vector<std::string>& values, int index)
+	{
+		for (int i = 0; i < values.size(); i++)
+		{
+			_lines[index]._myInputs[i]->SetValue(values[i]);
+		}
+	}
+
+	int _framesToNext;
 
 protected:
 	wxSizer* _parentContainer;
 	std::vector<ControlLine> _lines;
 	bool _hidden;
 	int _dimensions;
+	
 };

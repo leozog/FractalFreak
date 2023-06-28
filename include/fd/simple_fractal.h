@@ -50,6 +50,9 @@ namespace simple_fractal // made by Ola!
         Parameters(const std::initializer_list<Transform_2D> &transformations_ilist) : transformations{transformations_ilist}
         {
         }
+        Parameters(const std::vector<Transform_2D>& transformations_ilist) : transformations( transformations_ilist )
+        {
+        }
         std::unique_ptr<FractalParameters> copy() const override
         {
             return std::make_unique<simple_fractal::Parameters>(*this);
