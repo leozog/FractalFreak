@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
@@ -50,7 +50,7 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 
 	bTransformHolder = new wxBoxSizer(wxVERTICAL);
 
-	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Przekształcenia"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText1 = new wxStaticText(this, wxID_ANY, _(L"Przekształcenia"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText1->Wrap(-1);
 	bTransformHolder->Add(m_staticText1, 0, wxALL, 5);
 
@@ -77,7 +77,7 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	m_renderbutton = new wxButton(this, wxID_ANY, wxT("Generuj"), wxDefaultPosition, wxDefaultSize, 0);
 	bSizer8->Add(m_renderbutton, 0, wxALL, 5);
 
-	m_button_beginAnimation = new wxButton(this, wxID_ANY, wxT("Odtwórz"), wxDefaultPosition, wxDefaultSize, 0);
+	m_button_beginAnimation = new wxButton(this, wxID_ANY, _(L"Odtwórz"), wxDefaultPosition, wxDefaultSize, 0);
 	bSizer8->Add(m_button_beginAnimation, 0, wxALL, 5);
 
 	bSizer7->Add(bSizer8, 0, wxEXPAND, 5);
@@ -90,12 +90,12 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	bSizer9->Add(m_staticText4, 0, wxALL, 5);
 
 	m_widthtxt = new wxTextCtrl(this, wxID_ANY, wxT("640"), wxDefaultPosition, wxDefaultSize, 0);
-	m_widthtxt->SetToolTip(wxT("Szerokosc w pikselach"));
+	m_widthtxt->SetToolTip(_(L"Szerokość w pikselach"));
 
 	bSizer9->Add(m_widthtxt, 0, wxALL, 5);
 
 	m_heighttxt = new wxTextCtrl(this, wxID_ANY, wxT("480"), wxDefaultPosition, wxDefaultSize, 0);
-	m_heighttxt->SetToolTip(wxT("Wysokosc w pikselach"));
+	m_heighttxt->SetToolTip(_(L"Wysokość w pikselach"));
 
 	bSizer9->Add(m_heighttxt, 0, wxALL, 5);
 
@@ -114,7 +114,7 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	bSizer10->Add(m_itertxt, 0, wxALL, 5);
 
 	m_fps = new wxTextCtrl(this, wxID_ANY, wxT("10"), wxDefaultPosition, wxDefaultSize, 0);
-	m_fps->SetToolTip(wxT("Klatki na sekunde"));
+	m_fps->SetToolTip(_(L"Klatki na sekundę"));
 
 	bSizer10->Add(m_fps, 0, wxALL, 5);
 
