@@ -1,1 +1,5 @@
 /build/
+x64
+.vscode
+*vcxproj*
+.vs

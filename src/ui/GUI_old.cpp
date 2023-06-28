@@ -5,6 +5,7 @@
 // PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
+/*
 #include "ui/GUI.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -48,3 +49,4 @@ GUIMainFrame::~GUIMainFrame()
 	renderAnimationButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::renderAnimation), NULL, this);
 	playAnimationButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(GUIMainFrame::playAnimation), NULL, this);
 }
+*/
