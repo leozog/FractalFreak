@@ -31,8 +31,6 @@ public:
     std::shared_ptr<wxImage> get_frame_latest() const;      // returns latest ready frame img
     std::shared_ptr<wxImage> get_frame_x(uint32_t x) const; // returns frame img number x
 
-    void clear() { (*path).clear(); } // potrzebne do UI
-
     uint32_t n_frames() const;
     uint32_t n_frames_ready() const;
 };

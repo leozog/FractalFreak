@@ -108,18 +108,35 @@ void MainFrame::onGenerateButton(wxCommandEvent& event) {
 		Czêœæ ³aduj¹ca fraktal do AppData
 	*/
 
-	data.animation->clear();
+	std::unique_ptr<AnimationPath> path = std::make_unique<AnimationPath>();
 
+	int totalFrames = 0;
+	for (int i = 0; i < _fractalControls.size(); i++)
+	{
+		totalFrames += _fractalControls[i]._framesToNext;
+	}
+
+	double time;
+	m_timetxt->GetValue().ToDouble(&time);
+
+	// Dobierz FPS tak ¿eby animacja trwa³a tyle ile trzeba wzglêdem iloœci klatek w transformacjach
+	double fps = totalFrames / time;
+	
+
+	// Buduje wektor Transform_2D eksportuj¹c dane z UI
 	for (int i = 0; i < _fractalControls.size(); i++)
 	{
 
 		std::vector<Transform_2D> transforms = _fractalControls[i].exportTransforms2D();
-		data.animation->path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)),2.0);
+		if (transforms.size())
+			path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), _fractalControls[i]._framesToNext);
+		else
+			break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub je¿eli skoñcz¹ siê fraktale
 	}
 
-	/*
-		Od tego momentu to nie mój problem (do czasu wystawienia oceny) -- generowanie fraktali
-	*/
+	
+
+
 
 	int width, height;
 	m_widthtxt->GetValue().ToInt(&width);
@@ -130,9 +147,21 @@ void MainFrame::onGenerateButton(wxCommandEvent& event) {
 	this->Layout();
 	this->Fit();
 
+	int iterations;
+	m_itertxt->GetValue().ToInt(&iterations);
+
+	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<simple_fractal::points_generator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
+	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<simple_fractal::pixels_generator>();
+
+	data.animation = std::make_unique<Animation>(std::move(path), std::move(points), std::move(pixels)); // Tworzony nowy obiekt, nadpisuje poprzedni¹ animacjê, pamiêæ jest rzekomo zwalniania ~ cz³owiek UI
+
+	/*
+		Od tego momentu to nie mój problem (do czasu wystawienia oceny) -- generowanie fraktali
+	*/
+
 	try
 	{
-		data.animation->render(60, -1, width, height); // fps, n_of_threads, W, H
+		data.animation->render(fps, -1, width, height); // fps, n_of_threads, W, H
 	}
 	catch (const std::exception& e)
 	{
@@ -186,7 +215,7 @@ void MainFrame::onFileLoad(wxCommandEvent& event)
 	m_heighttxt->SetValue(elem);
 
 	getline(processing, elem, ',');
-	// TODO
+	m_itertxt->SetValue(elem);
 
 	getline(processing, elem, ',');
 	int dimensions = std::atoi(elem.data());
@@ -226,15 +255,23 @@ void MainFrame::onFileLoad(wxCommandEvent& event)
 				
 			}
 
+			
+			getline(input, elem);
+			_fractalControls[i]._framesToNext = std::atoi(elem.data()); //frames
+
 			if (i == 0)
 			{
 				_fractalControls[0].Show();
+				m_frames->SetValue(elem);
 			}
-			getline(input, elem);
-			_fractalControls[i]._framesToNext = std::atoi(elem.data()); //frames
 		}
 	}
 
 		
+
+}
+
+void MainFrame::onFramesText(wxCommandEvent& event)
+{
 
 }

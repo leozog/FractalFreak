@@ -21,6 +21,7 @@ protected:
 	void onAnimateButton(wxCommandEvent& event) override;
 	void onGenerateButton(wxCommandEvent& event) override;
 	void onFileLoad(wxCommandEvent& event) override;
+	void onFramesText(wxCommandEvent& event) override;
 
 	// displays wxImage frame
 	void drawFrame(wxImage img);
