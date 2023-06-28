@@ -58,6 +58,13 @@ void MainFrame::on_dimension_pick(wxCommandEvent& event)
 
 void MainFrame::onAnimateButton(wxCommandEvent& event)
 {
+
+	std::cout << data.animation->n_frames_ready();
+	for (int i = 0; i < data.animation->n_frames(); i++)
+	{
+		drawFrame(data.animation->get_frame_x(i));
+	}
+
 	// init
 	// frc_calc.calcSize(0);
 	// frc_calc.calcSize(1);
@@ -90,15 +97,26 @@ void MainFrame::onAnimateButton(wxCommandEvent& event)
 	*/
 }
 
-/*
+void MainFrame::onGenerateButton(wxCommandEvent& event) {
+	try
+	{
+		data.animation->render(60, -1, 640, 480); // fps, n_of_threads, W, H
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+}
+
+
 void MainFrame::drawFrame(std::shared_ptr<wxImage> img)
 {
 	// init
-	wxClientDC dc1(drawPanel);
+	wxClientDC dc1(m_fractalPanel);
 	wxBufferedDC dc(&dc1);
 
 	int width, height;
-	drawPanel->GetSize(&width, &height);
+	m_fractalPanel->GetSize(&width, &height);
 
 	dc.DestroyClippingRegion();
 	dc.SetClippingRegion(0, 0, width, height);
@@ -110,4 +128,3 @@ void MainFrame::drawFrame(std::shared_ptr<wxImage> img)
 	// draw frame
 	dc.DrawBitmap(wxBitmap(*img), 0, 0);
 }
-*/
