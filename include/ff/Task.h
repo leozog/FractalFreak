@@ -3,7 +3,13 @@
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
+
+#define _thread_debug
+
+#ifdef _thread_debug
+#include <iostream>
 #include <string>
+#endif
 
 class Task
 {

@@ -56,6 +56,9 @@
         "cctype": "cpp",
         "clocale": "cpp",
         "ctime": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp",
+        "string": "cpp"
     }
 }

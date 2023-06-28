@@ -1,7 +1,6 @@
 #include "ui/MainFrame.h"
 
-
-MainFrame::MainFrame(wxWindow* parent, AppData& dataRef) : MyFrame1(parent), data(dataRef)
+MainFrame::MainFrame(wxWindow *parent, AppData &dataRef) : MyFrame1(parent), data(dataRef)
 {
 	_fractalControls.push_back(ControlSet(bTransformHolder));
 	_currentFractal = 0;
@@ -9,21 +8,19 @@ MainFrame::MainFrame(wxWindow* parent, AppData& dataRef) : MyFrame1(parent), dat
 	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
 }
 
-
-void MainFrame::onTransformDelete(wxCommandEvent& event)
+void MainFrame::onTransformDelete(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].HandleTransformDestroy(event.GetId());
 	event.Skip();
 }
 
-void MainFrame::onTransformAdd(wxCommandEvent& event)
+void MainFrame::onTransformAdd(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].AddLine();
 	event.Skip();
-	
 }
 
-void MainFrame::fractal_left_button(wxCommandEvent& event)
+void MainFrame::fractal_left_button(wxCommandEvent &event)
 {
 	if (_currentFractal > 0)
 	{
@@ -36,7 +33,7 @@ void MainFrame::fractal_left_button(wxCommandEvent& event)
 	event.Skip();
 }
 
-void MainFrame::fractal_right_button(wxCommandEvent& event)
+void MainFrame::fractal_right_button(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].Hide();
 
@@ -55,12 +52,12 @@ void MainFrame::fractal_right_button(wxCommandEvent& event)
 	event.Skip();
 }
 
-void MainFrame::on_dimension_pick(wxCommandEvent& event)
+void MainFrame::on_dimension_pick(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].updateDimensions(m_choice1->GetSelection() + 2);
 }
 
-void MainFrame::onAnimateButton(wxCommandEvent& event)
+void MainFrame::onAnimateButton(wxCommandEvent &event)
 {
 
 	std::cout << data.animation->n_frames_ready();
@@ -68,7 +65,6 @@ void MainFrame::onAnimateButton(wxCommandEvent& event)
 	{
 		drawFrame(data.animation->get_frame_x(i));
 	}
-
 
 	// init
 	// frc_calc.calcSize(0);
@@ -102,25 +98,30 @@ void MainFrame::onAnimateButton(wxCommandEvent& event)
 	*/
 }
 
-void MainFrame::onGenerateButton(wxCommandEvent& event) {
-
-	/*
-		Czêœæ ³aduj¹ca fraktal do AppData
-	*/
-
-	data.animation->clear();
+void MainFrame::onGenerateButton(wxCommandEvent &event)
+{
+	// inicjalizajca sciezki animacji
+	std::unique_ptr<AnimationPath> path = std::make_unique<AnimationPath>();
 
 	for (int i = 0; i < _fractalControls.size(); i++)
 	{
-
 		std::vector<Transform_2D> transforms = _fractalControls[i].exportTransforms2D();
-		data.animation->path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)),2.0);
+		path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), 2.0);
 	}
 
-	/*
-		Od tego momentu to nie mój problem (do czasu wystawienia oceny) -- generowanie fraktali
-	*/
+	// czas w sekundach od poprzedniego stage'a
+	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<simple_fractal::points_generator>(20000); // w tym wypadku argumentem jest ilosc iteracji
+	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<simple_fractal::pixels_generator>();
 
+	// inicjalizacja animacji
+	data.animation = std::make_unique<Animation>(
+		std::move(path),   // AnimationPath
+		std::move(points), // Inheritance of FractalGenerator::Points
+		std::move(pixels)  // Inheritance of FractalGenerator::Pixels
+						   // TODO: post_process_stack
+	);
+
+	// get animation resolution
 	int width, height;
 	m_widthtxt->GetValue().ToInt(&width);
 	m_heighttxt->GetValue().ToInt(&height);
@@ -134,12 +135,11 @@ void MainFrame::onGenerateButton(wxCommandEvent& event) {
 	{
 		data.animation->render(60, -1, width, height); // fps, n_of_threads, W, H
 	}
-	catch (const std::exception& e)
+	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << '\n';
 	}
 }
-
 
 void MainFrame::drawFrame(std::shared_ptr<wxImage> img)
 {
@@ -161,13 +161,13 @@ void MainFrame::drawFrame(std::shared_ptr<wxImage> img)
 	dc.DrawBitmap(wxBitmap(*img), 0, 0);
 }
 
-void MainFrame::onFileLoad(wxCommandEvent& event)
+void MainFrame::onFileLoad(wxCommandEvent &event)
 {
 	wxFileDialog
 		openFileDialog(this, _("Otworz plik tekstowy z fraktalem"), "", "",
-			"TXT z fraktalem (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+					   "TXT z fraktalem (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
-		return;     // the user changed idea...
+		return; // the user changed idea...
 
 	std::ifstream input;
 	input.open(openFileDialog.GetPath().ToStdString());
@@ -198,7 +198,7 @@ void MainFrame::onFileLoad(wxCommandEvent& event)
 	if (dimensions == 0)
 	{
 
-		getline(input, elem); // pomiñ pozycjê kamery
+		getline(input, elem); // pomiï¿½ pozycjï¿½ kamery
 		getline(input, elem);
 		int fractals = std::atoi(elem.data());
 		for (int i = 0; i < fractals; i++)
@@ -221,9 +221,6 @@ void MainFrame::onFileLoad(wxCommandEvent& event)
 				}
 
 				_fractalControls[i].setLine(inputs, j);
-				
-				
-				
 			}
 
 			if (i == 0)
@@ -231,10 +228,7 @@ void MainFrame::onFileLoad(wxCommandEvent& event)
 				_fractalControls[0].Show();
 			}
 			getline(input, elem);
-			_fractalControls[i]._framesToNext = std::atoi(elem.data()); //frames
+			_fractalControls[i]._framesToNext = std::atoi(elem.data()); // frames
 		}
 	}
-
-		
-
 }

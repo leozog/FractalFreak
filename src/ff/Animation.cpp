@@ -33,14 +33,14 @@ std::shared_ptr<wxImage> Animation::get_frame_latest() const
         if (frames[i].is_ready())
             return dynamic_cast<const Frame &>(frames[i]).get_img();
     }
-    return std::make_shared<wxImage>(16, 16); // placeholder
+    return std::make_shared<wxImage>(0, 0); // placeholder
 }
 
 std::shared_ptr<wxImage> Animation::get_frame_x(uint32_t x) const
 {
     if (frames[x].is_ready())
         return dynamic_cast<const Frame &>(frames[x]).get_img();
-    return std::make_shared<wxImage>(16, 16);
+    return std::make_shared<wxImage>(0, 0);
 }
 
 uint32_t Animation::n_frames() const

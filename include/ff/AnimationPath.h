@@ -24,8 +24,6 @@ public:
     void compile();                                                  // Performs additional calculations after the whole path is assembled
     std::unique_ptr<FractalParameters> get_param(double time) const; // Returns a set of parameters necessary for generating a fractal for a given time
 
-    void clear() { stages.clear(); } // Potrzebne do UI
-
 private:
     // linear interpolation
     std::unique_ptr<FractalParameters> lerp(const std::unique_ptr<FractalParameters> &a, const std::unique_ptr<FractalParameters> &b, double t) const;

@@ -8,8 +8,6 @@
 
 class Animation
 {
-    friend class MainFrame; //fren
-
 private:
     const std::unique_ptr<AnimationPath> path;                              // path of animation describing the state of parameters in every frame
     const std::unique_ptr<const FractalGenerator::Points> points_generator; // class used to generate the points of the fractal
@@ -30,8 +28,6 @@ public:
 
     std::shared_ptr<wxImage> get_frame_latest() const;      // returns latest ready frame img
     std::shared_ptr<wxImage> get_frame_x(uint32_t x) const; // returns frame img number x
-
-    void clear() { (*path).clear(); } // potrzebne do UI
 
     uint32_t n_frames() const;
     uint32_t n_frames_ready() const;
