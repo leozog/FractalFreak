@@ -50,25 +50,30 @@ class MyFrame1 : public wxFrame
 		wxStaticText* m_staticText3;
 		wxButton* m_renderbutton;
 		wxButton* m_button_beginAnimation;
+		wxStaticText* m_staticText4;
 		wxTextCtrl* m_widthtxt;
 		wxTextCtrl* m_heighttxt;
+		wxStaticText* m_staticText5;
+		wxTextCtrl* m_itertxt;
+		wxTextCtrl* m_timetxt;
+		wxGauge* m_progress;
+		wxBoxSizer* bPanelSizer;
 		wxPanel* m_fractalPanel;
 		wxMenuBar* m_menubar1;
 		wxMenu* m_filemenu;
-		wxBoxSizer* bPanelSizer;
-		wxGauge* m_progress;
 
 		// Virtual event handlers, override them in your derived class
-		virtual void onCloseEvent( wxCloseEvent& event ) { event.Skip(); }
-		virtual void fractal_left_button( wxCommandEvent& event ) { event.Skip(); }
-		virtual void fractal_right_button( wxCommandEvent& event ) { event.Skip(); }
-		virtual void on_dimension_pick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onFramesText( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onTransformAdd( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onGenerateButton( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onAnimateButton( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onWidthText( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onHeightText( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onCloseEvent(wxCloseEvent& event) { event.Skip(); }
+		virtual void fractal_left_button(wxCommandEvent& event) { event.Skip(); }
+		virtual void fractal_right_button(wxCommandEvent& event) { event.Skip(); }
+		virtual void on_dimension_pick(wxCommandEvent& event) { event.Skip(); }
+		virtual void onFramesText(wxCommandEvent& event) { event.Skip(); }
+		virtual void onTransformAdd(wxCommandEvent& event) { event.Skip(); }
+		virtual void onGenerateButton(wxCommandEvent& event) { event.Skip(); }
+		virtual void onAnimateButton(wxCommandEvent& event) { event.Skip(); }
+		virtual void onWidthText(wxCommandEvent& event) { event.Skip(); }
+		virtual void onHeightText(wxCommandEvent& event) { event.Skip(); }
+		virtual void onIterText(wxCommandEvent& event) { event.Skip(); }
 		virtual void onFileLoad(wxCommandEvent& event) { event.Skip(); }
 
 
