@@ -9,6 +9,9 @@
 class Animation
 {
 private:
+    uint32_t W, H;
+    double fps;
+
     const std::unique_ptr<AnimationPath> path;                              // path of animation describing the state of parameters in every frame
     const std::unique_ptr<const FractalGenerator::Points> points_generator; // class used to generate the points of the fractal
     const std::unique_ptr<const FractalGenerator::Pixels> pixels_generator; // class used to generate the color and depth img from points
@@ -26,9 +29,13 @@ public:
     );
     void render(double fps, int32_t n_threads, uint32_t W, uint32_t H);
 
+    uint32_t n_frames() const;
+    uint32_t n_frames_ready() const;
+
     std::shared_ptr<wxImage> get_frame_latest() const;      // returns latest ready frame img
     std::shared_ptr<wxImage> get_frame_x(uint32_t x) const; // returns frame img number x
 
-    uint32_t n_frames() const;
-    uint32_t n_frames_ready() const;
+    double get_fps() const;
+    double get_W() const;
+    double get_H() const;
 };

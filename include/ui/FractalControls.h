@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BaseFrame.h"
-#include "fd/simple_fractal.h"
+#include "MyWindow.h"
+#include "FractalsDefinitions.h"
 
 // Represents a control set for specifying fractal parameters
 class ControlLine
@@ -11,7 +11,7 @@ class ControlLine
 
 public:
 	// Construct a new line set to add to the parent container
-	ControlLine(wxSizer * container, int dimensions = 2, bool doNotShow = false) : _parentContainer(container), _dimensions(dimensions)
+	ControlLine(wxSizer *container, int dimensions = 2, bool doNotShow = false) : _parentContainer(container), _dimensions(dimensions)
 	{
 		// Create a sizer to store buttons in
 		_myLineSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -21,10 +21,9 @@ public:
 		_myDeleteButton = new wxButton(_parentContainer->GetContainingWindow(), wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, 0);
 		_myLineSizer->Add(_myDeleteButton, 0, wxALL, 5);
 
-
 		for (int i = 0; i < dimensions * (dimensions + 1); i++) // TODO: Update this to N dimensions
 		{
-			wxTextCtrl* m_textctrl = new wxTextCtrl(_parentContainer->GetContainingWindow(), wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, wxTE_CENTER);
+			wxTextCtrl *m_textctrl = new wxTextCtrl(_parentContainer->GetContainingWindow(), wxID_ANY, wxT("1"), wxDefaultPosition, wxDefaultSize, wxTE_CENTER);
 			m_textctrl->SetMaxSize(wxSize(40, -1));
 			_myLineSizer->Add(m_textctrl, 0, wxALL, 5);
 			_myInputs.push_back(m_textctrl);
@@ -34,16 +33,14 @@ public:
 
 		_myLineSizer->Show(!doNotShow);
 
-		_myDeleteButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame1::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
-
+		_myDeleteButton->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyWindow::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
 	}
 
 	// Creating copies of the controlline objects would cause a ton of issues in terms of wxwidgets
-	ControlLine(const ControlLine& other) = delete;
-	ControlLine & operator=(const ControlLine& other) = delete;
+	ControlLine(const ControlLine &other) = delete;
+	ControlLine &operator=(const ControlLine &other) = delete;
 
-
-	ControlLine(ControlLine&& other)
+	ControlLine(ControlLine &&other)
 	{
 		_myLineSizer = other._myLineSizer;
 		other._myLineSizer = nullptr;
@@ -60,9 +57,10 @@ public:
 		_dimensions = other._dimensions;
 	}
 
-	ControlLine& operator=(ControlLine&& other)
+	ControlLine &operator=(ControlLine &&other)
 	{
-		if (this == &other) return *this;
+		if (this == &other)
+			return *this;
 
 		this->~ControlLine();
 
@@ -102,7 +100,7 @@ public:
 		if (newDimensions > _dimensions)
 		{
 			int controlsToCreate = newDimensions * (newDimensions + 1) - _myInputs.size();
-			
+
 		}
 		*/
 	}
@@ -111,7 +109,7 @@ public:
 	{
 		if (_myDeleteButton)
 		{
-			_myDeleteButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyFrame1::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
+			_myDeleteButton->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(MyWindow::onTransformDelete), NULL, _parentContainer->GetContainingWindow());
 			_myDeleteButton->Hide(); // TODO: Button garbage collection (help me God)
 		}
 
@@ -131,21 +129,19 @@ public:
 		}
 	}
 
-
 private:
-	wxSizer* _parentContainer;
-	wxBoxSizer* _myLineSizer;
-	wxButton* _myDeleteButton;
-	std::vector<wxTextCtrl*> _myInputs;
+	wxSizer *_parentContainer;
+	wxBoxSizer *_myLineSizer;
+	wxButton *_myDeleteButton;
+	std::vector<wxTextCtrl *> _myInputs;
 	int _dimensions;
 };
-
 
 class ControlSet
 {
 public:
 	// Construct a new Control Set, it requires a container to write to and can be set to not render when created
-	ControlSet(wxSizer * container, int dimensions = 2, bool startHidden = false) : _parentContainer(container), _hidden(startHidden), _dimensions(dimensions)
+	ControlSet(wxSizer *container, int dimensions = 2, bool startHidden = false) : _parentContainer(container), _hidden(startHidden), _dimensions(dimensions)
 	{
 		_framesToNext = 10;
 	}
@@ -212,14 +208,14 @@ public:
 			_lines[i]._myInputs[3]->GetValue().ToCDouble(&d);
 			_lines[i]._myInputs[4]->GetValue().ToCDouble(&e);
 			_lines[i]._myInputs[5]->GetValue().ToCDouble(&f);
-				
+
 			_toReturn.push_back(Transform_2D(a, b, c, d, e, f));
 		}
 		return _toReturn;
-	} 
+	}
 
-	// Ustawia tekst w œrodku linii, do u¿ycia przy importowaniu
-	void setLine(std::vector<std::string>& values, int index)
+	// Ustawia tekst w ï¿½rodku linii, do uï¿½ycia przy importowaniu
+	void setLine(std::vector<std::string> &values, int index)
 	{
 		for (int i = 0; i < values.size(); i++)
 		{
@@ -230,9 +226,8 @@ public:
 	int _framesToNext;
 
 protected:
-	wxSizer* _parentContainer;
+	wxSizer *_parentContainer;
 	std::vector<ControlLine> _lines;
 	bool _hidden;
 	int _dimensions;
-	
 };
