@@ -120,7 +120,17 @@ void MainFrame::onGenerateButton(wxCommandEvent &event)
 	{
 		std::vector<Transform_2D> transforms = _fractalControls[i].exportTransforms2D();
 		if (transforms.size())
-			path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), _fractalControls[i]._framesToNext);
+		{
+			if (i != 0)
+			{
+				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), _fractalControls[i - 1]._framesToNext);
+
+			}
+			else
+			{
+				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), 0);
+			}
+		}
 		else
 			break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub je�eli sko�cz� si� fraktale
 	}
