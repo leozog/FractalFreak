@@ -41,6 +41,11 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_choice1->SetSelection( 0 );
 	bSizer6->Add( m_choice1, 0, wxALL, 5 );
 
+	m_frames = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_frames->SetToolTip( wxT("Liczba klatek w tym fraktalu") );
+
+	bSizer6->Add( m_frames, 0, wxALL, 5 );
+
 
 	bSizer2->Add( bSizer6, 0, wxEXPAND, 5 );
 
@@ -62,10 +67,48 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	bSizer2->Add( bTransformHolder, 1, wxEXPAND, 5 );
 
+	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Ustawienia Animacji"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3->Wrap( -1 );
+	bSizer2->Add( m_staticText3, 0, wxALL, 5 );
+
+	wxBoxSizer* bSizer7;
+	bSizer7 = new wxBoxSizer( wxVERTICAL );
+
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_renderbutton = new wxButton( this, wxID_ANY, wxT("Generuj!"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_renderbutton, 0, wxALL, 5 );
+
+	m_button_beginAnimation = new wxButton( this, wxID_ANY, wxT("Animuj!"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer8->Add( m_button_beginAnimation, 0, wxALL, 5 );
+
+
+	bSizer7->Add( bSizer8, 0, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_widthtxt = new wxTextCtrl( this, wxID_ANY, wxT("640"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_widthtxt->SetToolTip( wxT("Szerokosc w pikselach") );
+
+	bSizer9->Add( m_widthtxt, 0, wxALL, 5 );
+
+	m_heighttxt = new wxTextCtrl( this, wxID_ANY, wxT("480"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_heighttxt->SetToolTip( wxT("Wysokosc w pikselach") );
+
+	bSizer9->Add( m_heighttxt, 0, wxALL, 5 );
+
+
+	bSizer7->Add( bSizer9, 0, wxEXPAND, 5 );
+
+
+	bSizer2->Add( bSizer7, 1, wxEXPAND, 5 );
+
 
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 
-	m_fractalPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_fractalPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 640,480 ), wxTAB_TRAVERSAL );
 	m_fractalPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
 	bSizer1->Add( m_fractalPanel, 1, wxEXPAND | wxALL, 5 );
@@ -73,19 +116,13 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Ustawienia Animacji"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText3->Wrap( -1 );
-	bSizer3->Add( m_staticText3, 0, wxALL, 5 );
-
-	m_button_beginAnimation = new wxButton( this, wxID_ANY, wxT("Animuj!"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_button_beginAnimation, 0, wxALL, 5 );
-
 
 	bSizer1->Add( bSizer3, 0, wxEXPAND, 5 );
 
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
+	bSizer1->Fit( this );
 	m_menubar1 = new wxMenuBar( 0 );
 	m_filemenu = new wxMenu();
 	wxMenuItem* m_menu_load;
@@ -108,20 +145,30 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame1::onCloseEvent ) );
 	m_fractal_left->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::fractal_left_button ), NULL, this );
 	m_fractal_right->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::fractal_right_button ), NULL, this );
 	m_choice1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::on_dimension_pick ), NULL, this );
+	m_frames->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onFramesText ), NULL, this );
 	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onTransformAdd ), NULL, this );
+	m_renderbutton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onGenerateButton ), NULL, this );
 	m_button_beginAnimation->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onAnimateButton ), NULL, this );
+	m_widthtxt->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onWidthText ), NULL, this );
+	m_heighttxt->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onHeightText ), NULL, this );
 }
 
 MyFrame1::~MyFrame1()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame1::onCloseEvent ) );
 	m_fractal_left->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::fractal_left_button ), NULL, this );
 	m_fractal_right->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::fractal_right_button ), NULL, this );
 	m_choice1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::on_dimension_pick ), NULL, this );
+	m_frames->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onFramesText ), NULL, this );
 	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onTransformAdd ), NULL, this );
+	m_renderbutton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onGenerateButton ), NULL, this );
 	m_button_beginAnimation->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::onAnimateButton ), NULL, this );
+	m_widthtxt->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onWidthText ), NULL, this );
+	m_heighttxt->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MyFrame1::onHeightText ), NULL, this );
 
 }
