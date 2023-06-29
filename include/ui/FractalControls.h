@@ -137,6 +137,16 @@ private:
 	int _dimensions;
 };
 
+class BadUserInput : public std::exception {
+public:
+	BadUserInput(int input, int transform) : _input(input), _transform(transform) {}
+	const char* what(){
+		return "bad user arguments were provided";
+		}
+	int _input;
+	int _transform;
+};
+
 class ControlSet
 {
 public:
@@ -202,12 +212,31 @@ public:
 		{
 			const int currentDimension = _lines[i]._dimensions;
 			double a, b, c, d, e, f;
-			_lines[i]._myInputs[0]->GetValue().ToCDouble(&a);
-			_lines[i]._myInputs[1]->GetValue().ToCDouble(&b);
-			_lines[i]._myInputs[2]->GetValue().ToCDouble(&c);
-			_lines[i]._myInputs[3]->GetValue().ToCDouble(&d);
-			_lines[i]._myInputs[4]->GetValue().ToCDouble(&e);
-			_lines[i]._myInputs[5]->GetValue().ToCDouble(&f);
+			if (!_lines[i]._myInputs[0]->GetValue().ToCDouble(&a))
+			{
+				throw BadUserInput(0, i);
+			}
+			if (!_lines[i]._myInputs[1]->GetValue().ToCDouble(&b))
+			{
+				throw BadUserInput(1, i);
+			}
+			if (!_lines[i]._myInputs[2]->GetValue().ToCDouble(&c))
+			{
+				throw BadUserInput(2, i);
+			}
+			if (!_lines[i]._myInputs[3]->GetValue().ToCDouble(&d))
+			{
+				throw BadUserInput(3, i);
+			}
+			if (!_lines[i]._myInputs[4]->GetValue().ToCDouble(&e))
+			{
+				throw BadUserInput(4, i);
+			}
+			if (!_lines[i]._myInputs[5]->GetValue().ToCDouble(&f))
+			{
+				throw BadUserInput(5, i);
+			}
+
 
 			_toReturn.push_back(Transform_2D(a, b, c, d, e, f));
 		}
