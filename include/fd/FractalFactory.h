@@ -15,11 +15,9 @@
 
 #include <typeinfo>
 #include <typeindex>
+#include <iostream>
 
 
-
-
-// TODO: give appropriate name
 namespace fractal_factory
 {
 

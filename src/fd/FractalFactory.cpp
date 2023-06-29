@@ -36,7 +36,16 @@ namespace fractal_factory
 
     std::vector<std::unique_ptr<FractalPoint>> PointsGenerator::calculate(const std::unique_ptr<FractalParameters>& param) const
     {
-        // dynamic_cast for speed and legibility //TODO(!): ochrona przed zlym castem. zeby wywalalo exception
+        // dynamic_cast for speed and legibility
+        try
+        {
+            std::vector<AffineTransformation_2D>& transformations = dynamic_cast<Parameters*>(param.get())->getTransformations();
+        }
+        catch (const std::bad_cast& e)
+        {
+            std::cout << "in PointsGenerator::calculate:\n" << e.what() << std::endl;
+        }
+
         std::vector<AffineTransformation_2D>& transformations = dynamic_cast<Parameters*>(param.get())->getTransformations();
 
         std::vector<float> prob_sum = calcProbabilities(transformations);
@@ -45,6 +54,20 @@ namespace fractal_factory
         glm::vec2 p(0., 0.);
         std::vector<std::unique_ptr<FractalPoint>> generated_points;
         generated_points.reserve(points_per_frame);
+
+        // loop 100 times first to avoid stutter
+        for (int i = 0; i < 100; i++)
+        {
+            double random_val = Random::rand_d(0., 1.); // random value from 0. to 1.
+            for (int j = 0; j < prob_sum.size(); j++)
+            {
+                if (random_val <= prob_sum[j])
+                {
+                    p = transformations[j].matrix * p + transformations[j].vector;
+                    break;
+                }
+            }
+        }
 
         // randomly pick transformations to apply to p (based on probability)
         // save all points created this way to a vector
@@ -68,6 +91,9 @@ namespace fractal_factory
 
     std::vector<float> PointsGenerator::calcProbabilities(std::vector<AffineTransformation_2D>& transformations) const
     {
+        if (transformations.empty())
+            return std::vector<float>(0);
+
         // sum determinants of all matrices
         float det_sum = 0.;
         for (auto& transformation : transformations)
@@ -89,6 +115,9 @@ namespace fractal_factory
 
 	void PixelsGenerator::render(const std::vector<std::unique_ptr<FractalPoint>>& points, wxImage& bitmap, wxImage& depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const
     {
+        if (points.empty() || !bitmap.IsOk())
+            return;
+
         // find max and min values of x and y
         double x_min = points[0]->x;
         double x_max = points[0]->x;
