@@ -29,8 +29,8 @@ void MainWindow::fractal_left_button(wxCommandEvent &event)
 		_fractalControls[_currentFractal].Show();
 		m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
 		m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
+		this->Layout();
 	}
-	event.Skip();
 }
 
 void MainWindow::fractal_right_button(wxCommandEvent &event)
@@ -49,7 +49,7 @@ void MainWindow::fractal_right_button(wxCommandEvent &event)
 	}
 	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
 	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
-	event.Skip();
+	this->Layout();
 }
 
 void MainWindow::on_dimension_pick(wxCommandEvent &event)
@@ -60,7 +60,6 @@ void MainWindow::on_dimension_pick(wxCommandEvent &event)
 void MainWindow::onAnimateButton(wxCommandEvent &event)
 {
 	framesdrawer.draw(data.animation->get_fps(), FramesDrawer::Mode::View);
-	event.Skip();
 }
 
 void MainWindow::onGenerateButton(wxCommandEvent &event)
@@ -133,4 +132,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 
 void MainWindow::onFramesText(wxCommandEvent &event)
 {
+
+	int val; 
+	if (m_frames->GetValue().ToInt(&val))
+	_fractalControls[_currentFractal]._framesToNext = val;
 }
