@@ -113,6 +113,40 @@ namespace fractal_factory
         return prob_sum;
     }
 
+    void PixelsGenerator::hslToRgb(uint8_t& red, uint8_t& green, uint8_t& blue, float h, float s, float l) const
+    {
+        while (h > 1.)
+        {
+            h -= 1.;
+            l -= 0.2;
+        }
+
+        if (s == 0.)
+        {
+            red = green = blue = l * 255.;
+            return;
+        }
+
+        float var2 = (l < 0.5) ? var2 = l * (1 + s) : var2 = (l + s) - (s * l);
+        float var1 = 2 * l - var2;
+
+        
+
+        red = 255. * hueToRgb(var1, var2, h + 0.3333333f);
+        green = 255. * hueToRgb(var1, var2, h);
+        blue = 255. * hueToRgb(var1, var2, h - 0.3333333f);
+    }
+
+    float PixelsGenerator::hueToRgb(float var1, float var2, float hue) const
+    {
+        if (hue < 0) hue += 1;
+        if (hue > 1) hue -= 1;
+        if (6 * hue < 1) return var1 + (var2 - var1) * 6 * hue;
+        if (2 * hue < 1) return var2;
+        if (3 * hue < 2) return var1 + (var2 - var1) * (0.6666666f - hue) * 6;
+        return var1;
+    }
+
 	void PixelsGenerator::render(const std::vector<std::unique_ptr<FractalPoint>>& points, wxImage& bitmap, wxImage& depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const
     {
         if (points.empty() || !bitmap.IsOk())
@@ -136,43 +170,20 @@ namespace fractal_factory
                 y_max = fpoint->y;
         }
 
+        std::vector<Color> pixelColors;
+
         // draw pixels on bitmap
         for (auto& fpoint : points)
         {
-            fractal_factory::Point* point = dynamic_cast<Point*>(fpoint.get());
+            Point* point = dynamic_cast<Point*>(fpoint.get());
 
-            // set point color
-            uint8_t red = 0, green = 0, blue = 0;
+            // create new colors if there isn't enough
+            while (point->transformation_id >= pixelColors.size())
+            {
+                uint8_t red, green, blue;
+                hslToRgb(red, green, blue, 50. / 360. * pixelColors.size());
 
-            if (point->transformation_id == 0) // red 
-            {
-                red = 255;
-                green = 0;
-                blue = 0;
-            }
-            else if (point->transformation_id == 1) // green 
-            {
-                red = 0;
-                green = 255;
-                blue = 0;
-            }
-            else if (point->transformation_id == 2) // blue 
-            {
-                red = 0;
-                green = 0;
-                blue = 255;
-            }
-            else if (point->transformation_id == 3) // purple 
-            {
-                red = 255;
-                green = 0;
-                blue = 255;
-            }
-            else if (point->transformation_id == 4) // yellow 
-            {
-                red = 255;
-                green = 255;
-                blue = 0;
+                pixelColors.emplace_back(red, green, blue);
             }
 
             // calc coordinates
@@ -181,7 +192,7 @@ namespace fractal_factory
 
             // if the pixel is inside the bitmap, draw it
             if (0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)
-                bitmap.SetRGB(bitmapX, bitmapY, red, green, blue);
+                bitmap.SetRGB(bitmapX, bitmapY, pixelColors[point->transformation_id].red, pixelColors[point->transformation_id].green, pixelColors[point->transformation_id].blue);
         }
     }
 }

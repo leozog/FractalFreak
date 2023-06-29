@@ -44,7 +44,7 @@ class Parameters : public FractalParameters
 
 struct Point : public FractalPoint
 {
-    uint32_t transformation_id;
+	uint32_t transformation_id;
 
     Point(double x, double y, double z, uint32_t transformation_id) : FractalPoint{x, y, z}, transformation_id{ transformation_id } {}
 };
@@ -67,6 +67,16 @@ class PointsGenerator : public FractalGenerator::Points
 
 class PixelsGenerator : public FractalGenerator::Pixels
 {
+	private:
+		struct Color
+		{
+			uint8_t red, green, blue;
+			Color(uint8_t red, uint8_t green, uint8_t blue): red(red), green(green), blue(blue) {}
+		};
+
+		void hslToRgb(uint8_t& red, uint8_t& green, uint8_t& blue, float h, float s = 1., float l = 0.5) const;
+		float hueToRgb(float var1, float var2, float hue) const;
+
 	public:
 		// draw points on bitmap
 	    void render(const std::vector<std::unique_ptr<FractalPoint>>& points, wxImage& bitmap, wxImage& depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const override;
