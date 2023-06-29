@@ -205,9 +205,9 @@ public:
 	}
 
 	// Exportts all transformations into something more manageable
-	std::vector<Transform_2D> exportTransforms2D()
+	std::vector<AffineTransformation_2D> exportTransforms2D()
 	{
-		std::vector<Transform_2D> _toReturn;
+		std::vector<AffineTransformation_2D> _toReturn;
 		for (int i = 0; i < _lines.size(); i++)
 		{
 			const int currentDimension = _lines[i]._dimensions;
@@ -238,7 +238,7 @@ public:
 			}
 
 
-			_toReturn.push_back(Transform_2D(a, b, c, d, e, f));
+			_toReturn.push_back(AffineTransformation_2D(a, b, c, d, e, f));
 		}
 		return _toReturn;
 	}
