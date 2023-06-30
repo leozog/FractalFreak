@@ -146,8 +146,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 
 	if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
 
-	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<simple_fractal::points_generator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
-	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<simple_fractal::pixels_generator>();
+	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
+	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator>();
 
 
 	// Animation initialization

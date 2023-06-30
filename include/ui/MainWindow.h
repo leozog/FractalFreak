@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "ui/FramesDrawer.h"
+#include "fd/FractalFactory.h"
 
 class MainWindow : public MyWindow
 {
