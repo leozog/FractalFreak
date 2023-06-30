@@ -132,16 +132,16 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	m_staticText6->Wrap(-1);
 	b_cameraSizer->Add(m_staticText6, 0, wxALL, 5);
 
-	m_textCtrl9 = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
-	m_textCtrl9->SetToolTip(wxT("X"));
+	m_textCtrl_X = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
+	m_textCtrl_X->SetToolTip(wxT("X"));
 
-	b_cameraSizer->Add(m_textCtrl9, 0, wxALL, 5);
+	b_cameraSizer->Add(m_textCtrl_X, 0, wxALL, 5);
 
-	m_textCtrl8 = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
-	b_cameraSizer->Add(m_textCtrl8, 0, wxALL, 5);
+	m_textCtrl_Y = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
+	b_cameraSizer->Add(m_textCtrl_Y, 0, wxALL, 5);
 
-	m_textCtrl71 = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
-	b_cameraSizer->Add(m_textCtrl71, 0, wxALL, 5);
+	m_textCtrl_Z = new wxTextCtrl(this, wxID_ANY, wxT("0"), wxDefaultPosition, wxSize(50, -1), 0);
+	b_cameraSizer->Add(m_textCtrl_Z, 0, wxALL, 5);
 
 
 	bSizer7->Add(b_cameraSizer, 0, wxEXPAND, 5);

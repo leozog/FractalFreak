@@ -55,9 +55,9 @@ protected:
 	wxTextCtrl* m_itertxt;
 	wxTextCtrl* m_timetxt;
 	wxStaticText* m_staticText6;
-	wxTextCtrl* m_textCtrl9;
-	wxTextCtrl* m_textCtrl8;
-	wxTextCtrl* m_textCtrl71;
+	wxTextCtrl* m_textCtrl_X;
+	wxTextCtrl* m_textCtrl_Y;
+	wxTextCtrl* m_textCtrl_Z;
 	wxBoxSizer* b_cameraSizer;
 	wxGauge* m_progress;
 	wxBoxSizer* bPanelSizer;

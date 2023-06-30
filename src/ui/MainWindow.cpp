@@ -4,8 +4,7 @@ MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), d
 {
 	_fractalControls.push_back(ControlSet(bTransformHolder));
 	_currentFractal = 0;
-	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
-	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
+	this->updateFractalUI();
 	chosenDimension = 2;
 	b_cameraSizer->Show(false);
 }
@@ -50,8 +49,7 @@ void MainWindow::fractal_right_button(wxCommandEvent &event)
 		_currentFractal++;
 		_fractalControls[_currentFractal].Show();
 	}
-	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
-	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
+	this->updateFractalUI();
 	this->Layout();
 }
 
@@ -59,17 +57,27 @@ void MainWindow::on_dimension_pick(wxCommandEvent &event)
 {
 	// Zmiana wymiaru na nowy
 	int newDimension = m_choice1->GetSelection() + 2;
+	this->setDimension(newDimension);
+}
+
+void MainWindow::setDimension(int newDimension, bool safe)
+{
 	if (newDimension == chosenDimension) return; // Do nothing
 
 	chosenDimension = newDimension;
 
+	_fractalControls[_currentFractal].Hide();
 	_fractalControls.clear();
-	_fractalControls.push_back(ControlSet(bTransformHolder));
-	_fractalControls[_currentFractal].updateDimensions(newDimension);
-	_currentFractal = 0;
 
-	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
-	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
+	if (safe) // File loading might want to add its own objects and then modify them
+	{
+		_fractalControls.push_back(ControlSet(bTransformHolder));
+		_fractalControls[_currentFractal].updateDimensions(newDimension);
+
+		this->updateFractalUI();
+	}
+	
+	_currentFractal = 0;
 
 	if (newDimension == 2)
 	{
@@ -81,6 +89,12 @@ void MainWindow::on_dimension_pick(wxCommandEvent &event)
 	}
 
 	this->Layout();
+}
+
+void MainWindow::updateFractalUI()
+{
+	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
+	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
 }
 
 void MainWindow::onAnimateButton(wxCommandEvent &event)
