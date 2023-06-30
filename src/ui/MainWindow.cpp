@@ -140,48 +140,103 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 
 	int gatheredFractals = 0;
 
-	// Buduje wektor Transform_2D eksportuj�c dane z UI
-	for (int i = 0; i < _fractalControls.size(); i++)
+	if (chosenDimension == 2)
 	{
-		std::vector<AffineTransformation_2D> transforms;
-		try {
-			transforms = _fractalControls[i].exportTransforms2D();
-		}
-		catch (BadUserInput except)
+		// Buduje wektor Transform_2D eksportuj�c dane z UI
+		for (int i = 0; i < _fractalControls.size(); i++)
 		{
-			return;
-		}
-
-		if (transforms.size())
-		{
-			if (i != 0)
+			std::vector<AffineTransformation_2D> transforms;
+			try {
+				transforms = _fractalControls[i].exportTransforms2D();
+			}
+			catch (BadUserInput except)
 			{
-				path->add(std::make_unique<fractal_factory::Parameters>(fractal_factory::Parameters(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+				return;
 			}
 
+			if (transforms.size())
+			{
+				if (i != 0)
+				{
+					path->add(std::make_unique<fractal_factory::Parameters2D>(fractal_factory::Parameters2D(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+				}
+
+				else
+				{
+					path->add(std::make_unique<fractal_factory::Parameters2D>(fractal_factory::Parameters2D(transforms)), 0);
+				}
+				gatheredFractals++;
+			}
 			else
-			{
-				path->add(std::make_unique<fractal_factory::Parameters>(fractal_factory::Parameters(transforms)), 0);
-			}
-			gatheredFractals++;
+				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
 		}
-		else
-			break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
+
+		if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
+
+		std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator2D>(iterations); // w tym wypadku argumentem jest ilosc iteracji
+		std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator2D>();
+
+
+		// Animation initialization
+		data.animation = std::make_unique<Animation>(
+			std::move(path),   // AnimationPath
+			std::move(points), // Inheritance of FractalGenerator::Points
+			std::move(pixels)  // Inheritance of FractalGenerator::Pixels
+			// TODO: post_process_stack
+		);
+	}
+	else if (chosenDimension == 3)
+	{
+		// Buduje wektor Transform_2D eksportuj�c dane z UI
+		for (int i = 0; i < _fractalControls.size(); i++)
+		{
+			std::vector<AffineTransformation_3D> transforms;
+			try {
+				transforms = _fractalControls[i].exportTransforms3D();
+			}
+			catch (BadUserInput except)
+			{
+				return;
+			}
+
+			if (transforms.size())
+			{
+				if (i != 0)
+				{
+					path->add(std::make_unique<fractal_factory::Parameters3D>(fractal_factory::Parameters3D(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+				}
+
+				else
+				{
+					path->add(std::make_unique<fractal_factory::Parameters3D>(fractal_factory::Parameters3D(transforms)), 0);
+				}
+				gatheredFractals++;
+			}
+			else
+				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
+		}
+
+		if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
+
+		double x, y, z;
+		m_textCtrl_X->GetValue().ToDouble(&x);
+		m_textCtrl_Y->GetValue().ToDouble(&y);
+		m_textCtrl_Z->GetValue().ToDouble(&z);
+
+		std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator3D>(iterations); // w tym wypadku argumentem jest ilosc iteracji
+		std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator3D>(x,y,z);
+
+
+		// Animation initialization
+		data.animation = std::make_unique<Animation>(
+			std::move(path),   // AnimationPath
+			std::move(points), // Inheritance of FractalGenerator::Points
+			std::move(pixels)  // Inheritance of FractalGenerator::Pixels
+			// TODO: post_process_stack
+		);
 	}
 
-	if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
-
-	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
-	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator>();
-
-
-	// Animation initialization
-	data.animation = std::make_unique<Animation>(
-		std::move(path),   // AnimationPath
-		std::move(points), // Inheritance of FractalGenerator::Points
-		std::move(pixels)  // Inheritance of FractalGenerator::Pixels
-						   // TODO: post_process_stack
-	);
+	
 
 	_timer->Start(100);
 	_uiState = RENDERING;

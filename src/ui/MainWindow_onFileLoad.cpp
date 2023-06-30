@@ -51,10 +51,10 @@ void MainWindow::onFileLoad(wxCommandEvent &event)
 	m_textCtrl_X->SetValue(elem);
 
 	getline(processing, elem, ' ');
-	m_textCtrl_X->SetValue(elem);
+	m_textCtrl_Y->SetValue(elem);
 
 	getline(processing, elem, ' ');
-	m_textCtrl_X->SetValue(elem);
+	m_textCtrl_Z->SetValue(elem);
 
 	// Kolejna linia to liczba fraktali do wczytania
 	getline(input, elem);

@@ -243,6 +243,68 @@ public:
 		return _toReturn;
 	}
 
+	std::vector<AffineTransformation_3D> exportTransforms3D()
+	{
+		std::vector<AffineTransformation_3D> _toReturn;
+		for (int i = 0; i < _lines.size(); i++)
+		{
+			const int currentDimension = _lines[i]._dimensions;
+			double a, b, c, d, e, f, g, h, v, j, k, l;
+			if (!_lines[i]._myInputs[0]->GetValue().ToCDouble(&a))
+			{
+				throw BadUserInput(0, i);
+			}
+			if (!_lines[i]._myInputs[1]->GetValue().ToCDouble(&b))
+			{
+				throw BadUserInput(1, i);
+			}
+			if (!_lines[i]._myInputs[2]->GetValue().ToCDouble(&c))
+			{
+				throw BadUserInput(2, i);
+			}
+			if (!_lines[i]._myInputs[3]->GetValue().ToCDouble(&d))
+			{
+				throw BadUserInput(3, i);
+			}
+			if (!_lines[i]._myInputs[4]->GetValue().ToCDouble(&e))
+			{
+				throw BadUserInput(4, i);
+			}
+			if (!_lines[i]._myInputs[5]->GetValue().ToCDouble(&f))
+			{
+				throw BadUserInput(5, i);
+			}
+			if (!_lines[i]._myInputs[6]->GetValue().ToCDouble(&g))
+			{
+				throw BadUserInput(65, i);
+			}
+			if (!_lines[i]._myInputs[7]->GetValue().ToCDouble(&h))
+			{
+				throw BadUserInput(7, i);
+			}
+			if (!_lines[i]._myInputs[8]->GetValue().ToCDouble(&v))
+			{
+				throw BadUserInput(8, i);
+			}
+			if (!_lines[i]._myInputs[9]->GetValue().ToCDouble(&j))
+			{
+				throw BadUserInput(9, i);
+			}
+			if (!_lines[i]._myInputs[10]->GetValue().ToCDouble(&k))
+			{
+				throw BadUserInput(10, i);
+			}
+			if (!_lines[i]._myInputs[11]->GetValue().ToCDouble(&l))
+			{
+				throw BadUserInput(11, i);
+			}
+
+
+			_toReturn.push_back(AffineTransformation_3D(a, b, c, d, e, f, g, h, v, j, k, l));
+		}
+		return _toReturn;
+	}
+
 	// Ustawia tekst w �rodku linii, do u�ycia przy importowaniu
 	void setLine(std::vector<std::string> &values, int index)
 	{
