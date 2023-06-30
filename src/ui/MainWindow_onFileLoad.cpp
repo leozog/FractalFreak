@@ -104,10 +104,32 @@ void MainWindow::onFileLoad(wxCommandEvent &event)
 		}
 		
 	}
-
+	input.close();
 	_currentFractal = 0;
 	_fractalControls[0].Show();
 	this->updateFractalUI();
 	this->Layout();
 	
+}
+
+void MainWindow::onSaveAs(wxCommandEvent& event)
+{
+	wxFileDialog
+		openFileDialog(this, _("Zapisz plik tekstowy z fraktalem"), "", "",
+			"TXT z fraktalem (*.txt)|*.txt", wxFD_SAVE);
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return; // the user changed idea...
+
+	std::ofstream output;
+	output.open(openFileDialog.GetPath().ToStdString());
+
+	output << m_widthtxt->GetValue() << "," << m_heighttxt->GetValue() << "," << m_itertxt->GetValue() << "," << chosenDimension - 2 << '\n';
+	output << m_textCtrl_X->GetValue() << " " << m_textCtrl_Y->GetValue() << " " << m_textCtrl_Z->GetValue() << "\n";
+	output << _fractalControls.size() << "\n";
+
+	for (int i = 0; i < _fractalControls.size(); i++)
+	{
+		output << _fractalControls[i].to_string() << "\n";
+	}
+	output.close();
 }

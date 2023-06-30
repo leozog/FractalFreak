@@ -305,6 +305,21 @@ public:
 		return _toReturn;
 	}
 
+	std::string to_string() const
+	{
+		std::string toReturn = std::to_string(_lines.size()) + "\n";
+		for (int i = 0; i < _lines.size(); i++)
+		{
+			for (int j = 0; j < (_dimensions * (_dimensions + 1) - 1); j++)
+			{
+				toReturn += _lines[i]._myInputs[j]->GetValue() + " ";
+			}
+			toReturn += _lines[i]._myInputs[_dimensions * (_dimensions + 1) - 1]->GetValue() + "\n";
+		}
+		toReturn += std::to_string(_framesToNext);
+		return toReturn;
+	}
+
 	// Ustawia tekst w �rodku linii, do u�ycia przy importowaniu
 	void setLine(std::vector<std::string> &values, int index)
 	{

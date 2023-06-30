@@ -38,6 +38,7 @@ protected:
 	void onFileLoad(wxCommandEvent &event) override;
 	void onFramesText(wxCommandEvent &event) override;
 	void onTimer(wxCommandEvent& event) override;
+	void onSaveAs(wxCommandEvent& event) override;
 
 	void setDimension(int newDimension, bool safe = true);
 	void updateFractalUI();
