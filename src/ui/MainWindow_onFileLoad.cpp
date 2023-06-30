@@ -60,6 +60,9 @@ void MainWindow::onFileLoad(wxCommandEvent &event)
 	getline(input, elem);
 	int fractals = std::atoi(elem.data());
 
+	_fractalControls.clear();
+	_currentFractal = 0;
+
 	
 
 	// Wczytywanie fraktali

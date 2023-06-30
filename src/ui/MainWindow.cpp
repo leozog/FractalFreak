@@ -122,8 +122,12 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	// get animation resolution
 	m_widthtxt->GetValue().ToInt(&frame_width);
 	m_heighttxt->GetValue().ToInt(&frame_height);
-	m_fractalPanel->SetSize(frame_width+10, frame_height+10);
-	bPanelSizer->SetMinSize(frame_width+10, frame_height+10);
+
+	bPanelSizer->SetMinSize(frame_width + 20, frame_height + 20);
+	m_fractalPanel->SetMaxSize(wxSize(frame_width, frame_height));
+	m_fractalPanel->SetMinSize(wxSize(frame_width, frame_height));
+	m_fractalPanel->SetSize(frame_width, frame_height);
+
 	this->Layout();
 	this->Fit();
 	//
