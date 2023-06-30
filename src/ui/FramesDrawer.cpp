@@ -1,4 +1,5 @@
 #include "ui/FramesDrawer.h"
+#include "ui/MainWindow.h"
 
 FramesDrawer::FramesDrawer(AppData &data, wxPanel *m_fractalPanel) : data{data}, m_fractalPanel{m_fractalPanel}, stop{false}, end{true}
 {
@@ -9,7 +10,7 @@ FramesDrawer::~FramesDrawer()
     clear();
 }
 
-void FramesDrawer::draw(double fps, Mode mode)
+void FramesDrawer::draw(double fps, Mode mode, MainWindow *callback)
 {
     clear();
     if (mode == Mode::Render)
@@ -19,7 +20,7 @@ void FramesDrawer::draw(double fps, Mode mode)
     }
     else if (mode == Mode::View)
     {
-        std::thread t(&FramesDrawer::drawView, this, fps);
+        std::thread t(&FramesDrawer::drawView, this, fps, callback);
         t.detach();
     }
 }
@@ -49,7 +50,7 @@ void FramesDrawer::drawRender(double fps)
     end = true;
 }
 
-void FramesDrawer::drawView(double fps)
+void FramesDrawer::drawView(double fps, MainWindow *callback)
 {
     uint32_t n = data.animation->n_frames();
     auto start = std::chrono::steady_clock::now();
@@ -61,6 +62,7 @@ void FramesDrawer::drawView(double fps)
         std::this_thread::sleep_for(std::chrono::microseconds((long long int)(1E6 / fps)) - (std::chrono::steady_clock::now() - start));
         start = std::chrono::steady_clock::now();
     }
+    callback->animationUnlock();
     end = true;
 }
 

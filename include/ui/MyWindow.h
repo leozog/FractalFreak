@@ -26,6 +26,7 @@
 #include <wx/menu.h>
 #include <wx/frame.h>
 #include <wx/gauge.h>
+#include <wx/timer.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +65,7 @@ protected:
 	wxPanel* m_fractalPanel;
 	wxMenuBar* m_menubar1;
 	wxMenu* m_filemenu;
+	wxTimer* _timer;
 
 	// Virtual event handlers, override them in your derived class
 	virtual void onCloseEvent(wxCloseEvent& event) { event.Skip(); }
@@ -79,6 +81,7 @@ protected:
 	virtual void onIterText(wxCommandEvent& event) { event.Skip(); }
 	virtual void onFileLoad(wxCommandEvent& event) { event.Skip(); }
 	virtual void onSaveAs(wxCommandEvent& event) { event.Skip(); }
+	virtual void onTimer(wxCommandEvent& event) { event.Skip(); }
 
 public:
 	MyWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(1000, 500), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);

@@ -12,6 +12,10 @@
 #include "ui/FramesDrawer.h"
 #include "fd/FractalFactory.h"
 
+enum AnimationState {
+	AWAITING, RENDERING, PLAYING
+};
+
 class MainWindow : public MyWindow
 {
 private:
@@ -22,6 +26,9 @@ private:
 	FramesDrawer framesdrawer;
 	int chosenDimension;
 
+	AnimationState _uiState;
+
+
 protected:
 	void fractal_left_button(wxCommandEvent &event) override;
 	void fractal_right_button(wxCommandEvent &event) override;
@@ -30,6 +37,7 @@ protected:
 	void onGenerateButton(wxCommandEvent &event) override;
 	void onFileLoad(wxCommandEvent &event) override;
 	void onFramesText(wxCommandEvent &event) override;
+	void onTimer(wxCommandEvent& event) override;
 
 	void setDimension(int newDimension, bool safe = true);
 	void updateFractalUI();
@@ -43,4 +51,5 @@ public:
 
 	void onTransformDelete(wxCommandEvent &event) override;
 	void onTransformAdd(wxCommandEvent &event) override;
+	void animationUnlock();
 };

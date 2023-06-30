@@ -201,6 +201,9 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	m_itertxt->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MyWindow::onIterText), NULL, this);
 	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyWindow::onFileLoad), this, m_menu_load->GetId());
 	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyWindow::onSaveAs), this, m_menu_saveas->GetId());
+
+	_timer = new wxTimer();
+	_timer->Connect(wxEVT_TIMER, wxCommandEventHandler(MyWindow::onTimer), NULL, this);
 }
 
 MyWindow::~MyWindow()
@@ -217,5 +220,5 @@ MyWindow::~MyWindow()
 	m_widthtxt->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MyWindow::onWidthText), NULL, this);
 	m_heighttxt->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MyWindow::onHeightText), NULL, this);
 	m_itertxt->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MyWindow::onIterText), NULL, this);
-
+	_timer->Disconnect(wxEVT_TIMER, wxCommandEventHandler(MyWindow::onTimer), NULL, this);
 }

@@ -9,6 +9,8 @@
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 
+class MainWindow;
+
 class FramesDrawer
 {
 public:
@@ -27,11 +29,11 @@ private:
 public:
     FramesDrawer(AppData &data, wxPanel *m_fractalPanel);
     ~FramesDrawer();
-    void draw(double fps, Mode mode);
+    void draw(double fps, Mode mode, MainWindow *callback = nullptr);
 
 private:
     void clear();
     void drawRender(double fps);
-    void drawView(double fps);
+    void drawView(double fps, MainWindow *callback);
     void drawFrame(std::shared_ptr<wxImage> img);
 };

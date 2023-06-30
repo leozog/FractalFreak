@@ -7,6 +7,10 @@ MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), d
 	this->updateFractalUI();
 	chosenDimension = 2;
 	b_cameraSizer->Show(false);
+
+	_uiState = AWAITING;
+
+	m_button_beginAnimation->Disable();
 }
 
 void MainWindow::onTransformDelete(wxCommandEvent &event)
@@ -99,7 +103,10 @@ void MainWindow::updateFractalUI()
 
 void MainWindow::onAnimateButton(wxCommandEvent &event)
 {
-	framesdrawer.draw(data.animation->get_fps(), FramesDrawer::Mode::View);
+	_uiState = PLAYING;
+	m_button_beginAnimation->Disable();
+	m_renderbutton->Disable();
+	framesdrawer.draw(data.animation->get_fps(), FramesDrawer::Mode::View, this);
 }
 
 void MainWindow::onGenerateButton(wxCommandEvent &event)
@@ -172,6 +179,11 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 						   // TODO: post_process_stack
 	);
 
+	_timer->Start(100);
+	_uiState = RENDERING;
+	m_renderbutton->Disable();
+	m_button_beginAnimation->Disable();
+
 	try
 	{
 		data.animation->render(fps, -1, frame_width, frame_height); // fps, n_of_threads, W, H
@@ -191,4 +203,35 @@ void MainWindow::onFramesText(wxCommandEvent &event)
 	int val; 
 	if (m_frames->GetValue().ToInt(&val))
 	_fractalControls[_currentFractal]._framesToNext = val;
+}
+
+void MainWindow::onTimer(wxCommandEvent& event)
+{
+	int ready = data.animation->n_frames_ready();
+	int total = data.animation->n_frames();
+
+	switch (_uiState)
+	{
+		case AWAITING: break;
+		case RENDERING:
+			
+			m_progress->SetValue( (static_cast<float>(ready) / total) * 100.0 );
+
+			if (ready == total)
+			{
+				_uiState = AWAITING;
+				m_button_beginAnimation->Enable();
+				m_renderbutton->Enable();
+				_timer->Stop();
+			}
+			
+
+			break;
+		case PLAYING:  break;
+	}
+}
+
+void MainWindow::animationUnlock()
+{
+	_uiState = AWAITING; m_renderbutton->Enable(); m_button_beginAnimation->Enable();
 }
