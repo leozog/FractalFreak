@@ -19,6 +19,7 @@ private:
 	std::vector<ControlSet> _fractalControls;
 
 	FramesDrawer framesdrawer;
+	int chosenDimension;
 
 protected:
 	void fractal_left_button(wxCommandEvent &event) override;
@@ -31,7 +32,10 @@ protected:
 
 public:
 	MainWindow(wxWindow *parent, AppData &_dataRef);
-	~MainWindow(){};
+	~MainWindow()
+	{
+
+	};
 
 	void onTransformDelete(wxCommandEvent &event) override;
 	void onTransformAdd(wxCommandEvent &event) override;

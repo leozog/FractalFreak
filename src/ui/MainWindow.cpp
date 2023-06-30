@@ -6,6 +6,8 @@ MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), d
 	_currentFractal = 0;
 	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
 	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
+	chosenDimension = 2;
+	b_cameraSizer->Show(false);
 }
 
 void MainWindow::onTransformDelete(wxCommandEvent &event)
@@ -41,6 +43,7 @@ void MainWindow::fractal_right_button(wxCommandEvent &event)
 	{
 		_fractalControls.push_back(ControlSet(bTransformHolder));
 		_currentFractal++;
+		_fractalControls[_currentFractal].updateDimensions(chosenDimension);
 	}
 	else
 	{
@@ -54,7 +57,30 @@ void MainWindow::fractal_right_button(wxCommandEvent &event)
 
 void MainWindow::on_dimension_pick(wxCommandEvent &event)
 {
-	_fractalControls[_currentFractal].updateDimensions(m_choice1->GetSelection() + 2);
+	// Zmiana wymiaru na nowy
+	int newDimension = m_choice1->GetSelection() + 2;
+	if (newDimension == chosenDimension) return; // Do nothing
+
+	chosenDimension = newDimension;
+
+	_fractalControls.clear();
+	_fractalControls.push_back(ControlSet(bTransformHolder));
+	_fractalControls[_currentFractal].updateDimensions(newDimension);
+	_currentFractal = 0;
+
+	m_frames->SetValue(std::to_string(_fractalControls[_currentFractal]._framesToNext));
+	m_textCtrl7->SetValue("Fraktal " + std::to_string(_currentFractal));
+
+	if (newDimension == 2)
+	{
+		b_cameraSizer->Show(false);
+	}
+	else
+	{
+		b_cameraSizer->Show(true);
+	}
+
+	this->Layout();
 }
 
 void MainWindow::onAnimateButton(wxCommandEvent &event)
@@ -69,8 +95,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	double fps;
 	int iterations;
 	////////
-	// get FPS
-	m_fps->GetValue().ToDouble(&fps);
+	// get time
+	m_timetxt->GetValue().ToDouble(&fps);
 	//
 	// get animation resolution
 	m_widthtxt->GetValue().ToInt(&frame_width);
@@ -86,6 +112,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 
 	// inicjalizajca sciezki animacji
 	std::unique_ptr<AnimationPath> path = std::make_unique<AnimationPath>();
+
+	int gatheredFractals = 0;
 
 	// Buduje wektor Transform_2D eksportuj�c dane z UI
 	for (int i = 0; i < _fractalControls.size(); i++)
@@ -110,13 +138,17 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			{
 				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), 0);
 			}
+			gatheredFractals++;
 		}
 		else
 			break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
 	}
 
+	if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
+
 	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<simple_fractal::points_generator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
 	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<simple_fractal::pixels_generator>();
+
 
 	// Animation initialization
 	data.animation = std::make_unique<Animation>(
