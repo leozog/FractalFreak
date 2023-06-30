@@ -118,7 +118,7 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	// Buduje wektor Transform_2D eksportuj�c dane z UI
 	for (int i = 0; i < _fractalControls.size(); i++)
 	{
-		std::vector<Transform_2D> transforms;
+		std::vector<AffineTransformation_2D> transforms;
 		try {
 			transforms = _fractalControls[i].exportTransforms2D();
 		}
@@ -131,12 +131,12 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 		{
 			if (i != 0)
 			{
-				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+				path->add(std::make_unique<fractal_factory::Parameters>(fractal_factory::Parameters(transforms)), _fractalControls[i - 1]._framesToNext / fps);
 			}
 
 			else
 			{
-				path->add(std::make_unique<simple_fractal::Parameters>(simple_fractal::Parameters(transforms)), 0);
+				path->add(std::make_unique<fractal_factory::Parameters>(fractal_factory::Parameters(transforms)), 0);
 			}
 			gatheredFractals++;
 		}
