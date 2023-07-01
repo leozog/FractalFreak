@@ -75,7 +75,7 @@ namespace fractal_factory
 
 			// calc coordinates
 			int bitmapX = (point->x - x_min) / (x_max - x_min) * bitmapWidth;
-			int bitmapY = bitmapHeight - (point->y - y_min) / (y_max - y_min) * bitmapHeight;
+			int bitmapY = static_cast<double>(bitmapHeight) - (point->y - y_min) / (y_max - y_min) * bitmapHeight;
 
 			// if the pixel is inside the bitmap, draw it
 			if (0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)
@@ -145,24 +145,24 @@ namespace fractal_factory
 		// find max and min values of x, y, z
 		double z_max = drawablePoints[0].z;
 
-		//double x_min = drawablePoints[0].x;
-		//double x_max = drawablePoints[0].x;
-		//double y_min = drawablePoints[0].y;
-		//double y_max = drawablePoints[0].y;
+		double x_min = drawablePoints[0].x;
+		double x_max = drawablePoints[0].x;
+		double y_min = drawablePoints[0].y;
+		double y_max = drawablePoints[0].y;
 
 		for (int i = 0; i < points.size(); i++)
 		{
 			if (z_max < drawablePoints[i].z)
 				z_max = drawablePoints[i].z;
 
-			//if (x_min > drawablePoints[i].x)
-			//	x_min = drawablePoints[i].x;
-			//if (x_max < drawablePoints[i].x)
-			//	x_max = drawablePoints[i].x;
-			//if (y_min > drawablePoints[i].y)
-			//	y_min = drawablePoints[i].y;
-			//if (y_max < drawablePoints[i].y)
-			//	y_max = drawablePoints[i].y;
+			if (x_min > drawablePoints[i].x)
+				x_min = drawablePoints[i].x;
+			if (x_max < drawablePoints[i].x)
+				x_max = drawablePoints[i].x;
+			if (y_min > drawablePoints[i].y)
+				y_min = drawablePoints[i].y;
+			if (y_max < drawablePoints[i].y)
+				y_max = drawablePoints[i].y;
 
 			drawablePoints[i].w = dynamic_cast<const Point&>(*points[i]).transformation_id;
 		}
@@ -176,9 +176,8 @@ namespace fractal_factory
 			if (point.z <= 0 || point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1) 
 				continue; // nie rysujemy tego czego nie widac
 
-
-			int bitmapX = (bitmapWidth / 2) + point.x * bitmapWidth / 2;
-			int bitmapY = (bitmapHeight / 2) + point.y * bitmapHeight / 2;
+			int bitmapX = (point.x - x_min) / (x_max - x_min) * bitmapWidth/1.5 + bitmapWidth / 6;
+			int bitmapY = (point.y - y_min) / (y_max - y_min) * bitmapHeight/1.5 + bitmapHeight / 6;
 
 			float lightness = 1 - (point.z / z_max);
 
