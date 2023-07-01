@@ -34,7 +34,10 @@ std::unique_ptr<FractalParameters> AnimationPath::get_param(double time) const
     for (int i = 0; i < stages.size() - 1; i++)
     {
         if (time <= stages[i + 1].time)
-            return lerp(stages[i].param, stages[i + 1].param, (time - stages[i].time) / (stages[i + 1].time - stages[i].time));
+        {
+            time = smoothstep(0, 1, (time - stages[i].time) / (stages[i + 1].time - stages[i].time));
+            return lerp(stages[i].param, stages[i + 1].param, time);
+        }
     }
     return stages.back().param->copy();
 }
@@ -47,4 +50,13 @@ std::unique_ptr<FractalParameters> AnimationPath::lerp(const std::unique_ptr<Fra
         return b->copy();
     else
         return a + t * (b - a);
+}
+
+double AnimationPath::smoothstep(double a, double b, double t) const
+{
+    if (t <= 0)
+        return a;
+    else if (t >= 1)
+        return b;
+    return t * t * (3.0 - 2.0 * t) * (b - a) + a;
 }

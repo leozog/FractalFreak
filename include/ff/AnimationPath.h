@@ -27,4 +27,5 @@ public:
 private:
     // linear interpolation
     std::unique_ptr<FractalParameters> lerp(const std::unique_ptr<FractalParameters> &a, const std::unique_ptr<FractalParameters> &b, double t) const;
+    double smoothstep(double a, double b, double t) const;
 };
