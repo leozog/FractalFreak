@@ -94,19 +94,37 @@ namespace fractal_factory
 		// Make the matrix for casting
 
 		double n, r, l, t, b, f;
-
+		
+		double ratio = 1;
 		t = 1; // top
 		b = -1; // bottom
-
 		l = -1; // left
 		r = 1; // right
 
-		f = 3; // far plane
-		n = 1; // near plane
+		if (bitmapWidth > bitmapHeight)
+		{
+			ratio = static_cast<double>(bitmapWidth) / bitmapHeight;
+			l = l * ratio;
+			r = r * ratio;
+		}
+		else
+		{
+			ratio = static_cast<double>(bitmapHeight) / bitmapWidth;
+			t = t * ratio;
+			b = b * ratio;
+		}
+
+		
+
+		
+
+		f = 100; // far plane
+		n = 0.1; // near plane
 
 		// na cele tego projektu nie wiemy o istnieniu glm::perspective!
 
-		glm::mat4 ortho_cast(n / 4, 0, 0, 0, 0, n / b, 0, 0, 0, 0, f / (f - n), 1, 0, 0, -f * n / (f - n), 0);
+		// glm::mat4 ortho_cast(n / 4, 0, 0, 0, 0, n / b, 0, 0, 0, 0, f / (f - n), 1, 0, 0, -f * n / (f - n), 0);
+		glm::mat4 ortho_cast(2* n, 0, 0, 0, 0, 2 * n / (t - b), 0, 0, (r + l) / (r - l), (t + b) / (t - b), -(f+n) / (f-n) ,-1, 0, 0, (-2 * f * n) / (f - n), 0);
 		glm::mat4 scale(2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2);
 
 		ortho_cast = ortho_cast * scale; //* inversion * rotation
@@ -177,7 +195,7 @@ namespace fractal_factory
 				continue; // nie rysujemy tego czego nie widac
 
 			int bitmapX = (point.x - x_min) / (x_max - x_min) * bitmapWidth/1.5 + bitmapWidth / 6;
-			int bitmapY = (point.y - y_min) / (y_max - y_min) * bitmapHeight/1.5 + bitmapHeight / 6;
+			int bitmapY = (1 - ((point.y - y_min) / (y_max - y_min))) * bitmapHeight/1.5 + bitmapHeight / 6;
 
 			float lightness = 1 - (point.z / z_max);
 
