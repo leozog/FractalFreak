@@ -8,7 +8,6 @@
 
 namespace fractal_factory
 {
-	// TODO: Add camera
 	class Parameters2D : public FractalParameters
 	{
 		private:
@@ -20,6 +19,7 @@ namespace fractal_factory
 
 			std::vector<AffineTransformation_2D>& getTransformations() { return transformations; }
 
+			// return copy of self
 			std::unique_ptr<FractalParameters> copy() const override;
 
 			// add a's matrices and vectors to this object's
@@ -41,6 +41,7 @@ namespace fractal_factory
 
 			std::vector<AffineTransformation_3D>& getTransformations() { return transformations; }
 
+			// return copy of self
 			std::unique_ptr<FractalParameters> copy() const override;
 
 			// add a's matrices and vectors to this object's
