@@ -1,69 +1,56 @@
 #include "ui/FramesDrawer.h"
-#include "ui/MainWindow.h"
 
-FramesDrawer::FramesDrawer(AppData &data, wxPanel *m_fractalPanel) : data{data}, m_fractalPanel{m_fractalPanel}, stop{false}, end{true}
+FramesDrawer::FramesDrawer(AppData &data, wxPanel *m_fractalPanel) : data{data}, m_fractalPanel{m_fractalPanel}, mode{Mode::Idle}, current_frame{0}, stop{false}
 {
+    drawing_thread = std::thread(FramesDrawer::draw_loop, this);
 }
 
 FramesDrawer::~FramesDrawer()
 {
-    clear();
-}
-
-void FramesDrawer::draw(double fps, Mode mode, MainWindow *callback)
-{
-    clear();
-    if (mode == Mode::Render)
-    {
-        std::thread t(&FramesDrawer::drawRender, this, fps);
-        t.detach();
-    }
-    else if (mode == Mode::View)
-    {
-        std::thread t(&FramesDrawer::drawView, this, fps, callback);
-        t.detach();
-    }
-}
-
-void FramesDrawer::clear()
-{
     stop = true;
-    while (!end)
-        ;
-    stop = false;
-    end = false;
+    drawing_thread.join();
 }
 
-void FramesDrawer::drawRender(double fps)
+void FramesDrawer::draw(double fps, Mode mode)
 {
-    uint32_t n = data.animation->n_frames();
+    this->fps = fps;
+    this->current_frame = 0;
+    this->mode = mode;
+}
+
+void FramesDrawer::draw_loop()
+{
     auto start = std::chrono::steady_clock::now();
-    while (data.animation->n_frames_ready() != n)
+    while (true)
     {
         if (stop)
             break;
-        drawFrame(data.animation->get_frame_latest());
-        std::this_thread::sleep_for(std::chrono::microseconds((long long int)(1E6 / fps)) - (std::chrono::steady_clock::now() - start));
-        start = std::chrono::steady_clock::now();
-    }
-    drawFrame(data.animation->get_frame_latest());
-    end = true;
-}
 
-void FramesDrawer::drawView(double fps, MainWindow *callback)
-{
-    uint32_t n = data.animation->n_frames();
-    auto start = std::chrono::steady_clock::now();
-    for (int i = 0; i < n; i++)
-    {
-        if (stop)
-            break;
-        drawFrame(data.animation->get_frame_x(i));
+        if (data.animation)
+        {
+            uint32_t n = data.animation->n_frames();
+            if (mode == Mode::Render)
+            {
+                current_frame = data.animation->n_frames_ready();
+                drawFrame(data.animation->get_frame_latest());
+            }
+            else if (mode == Mode::View)
+            {
+                if (current_frame < n)
+                {
+                    drawFrame(data.animation->get_frame_x(current_frame));
+                    current_frame++;
+                }
+                else
+                {
+                    drawFrame(data.animation->get_frame_latest());
+                }
+            }
+        }
+
         std::this_thread::sleep_for(std::chrono::microseconds((long long int)(1E6 / fps)) - (std::chrono::steady_clock::now() - start));
         start = std::chrono::steady_clock::now();
     }
-    callback->animationUnlock();
-    end = true;
 }
 
 void FramesDrawer::drawFrame(std::shared_ptr<wxImage> img)

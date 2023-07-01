@@ -47,6 +47,8 @@ uint32_t Animation::n_frames_ready() const
 
 std::shared_ptr<wxImage> Animation::get_frame_latest() const
 {
+    if (frames.size() == 0)
+        return std::make_shared<wxImage>(1, 1);
     for (int i = frames.size() - 1; i >= 0; i--)
     {
         if (frames[i].is_ready())
@@ -57,6 +59,8 @@ std::shared_ptr<wxImage> Animation::get_frame_latest() const
 
 std::shared_ptr<wxImage> Animation::get_frame_x(uint32_t x) const
 {
+    if (frames.size() == 0)
+        return std::make_shared<wxImage>(1, 1);
     if (frames[x].is_ready())
         return dynamic_cast<const Frame &>(frames[x]).get_img();
     return std::make_shared<wxImage>(1, 1);

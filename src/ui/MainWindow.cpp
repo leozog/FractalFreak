@@ -1,6 +1,6 @@
 #include "ui/MainWindow.h"
 
-MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), data(dataRef), framesdrawer{data, m_fractalPanel}
+MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), data(dataRef), framesdrawer(data, m_fractalPanel)
 {
 	_fractalControls.push_back(ControlSet(bTransformHolder));
 	_currentFractal = 0;
@@ -66,7 +66,8 @@ void MainWindow::on_dimension_pick(wxCommandEvent &event)
 
 void MainWindow::setDimension(int newDimension, bool safe)
 {
-	if (newDimension == chosenDimension) return; // Do nothing
+	if (newDimension == chosenDimension)
+		return; // Do nothing
 
 	chosenDimension = newDimension;
 
@@ -80,7 +81,7 @@ void MainWindow::setDimension(int newDimension, bool safe)
 
 		this->updateFractalUI();
 	}
-	
+
 	_currentFractal = 0;
 
 	if (newDimension == 2)
@@ -104,9 +105,9 @@ void MainWindow::updateFractalUI()
 void MainWindow::onAnimateButton(wxCommandEvent &event)
 {
 	_uiState = PLAYING;
-	m_button_beginAnimation->Disable();
-	m_renderbutton->Disable();
-	framesdrawer.draw(data.animation->get_fps(), FramesDrawer::Mode::View, this);
+	// m_button_beginAnimation->Disable();
+	// m_renderbutton->Disable();
+	framesdrawer.draw(data.animation->get_fps(), FramesDrawer::Mode::View);
 }
 
 void MainWindow::onGenerateButton(wxCommandEvent &event)
@@ -146,7 +147,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 		for (int i = 0; i < _fractalControls.size(); i++)
 		{
 			std::vector<AffineTransformation_2D> transforms;
-			try {
+			try
+			{
 				transforms = _fractalControls[i].exportTransforms2D();
 			}
 			catch (BadUserInput except)
@@ -171,18 +173,18 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
 		}
 
-		if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
+		if (gatheredFractals < 2)
+			return; // Nie da sie zrobic animacji z jednego fraktala
 
 		std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator2D>(iterations); // w tym wypadku argumentem jest ilosc iteracji
 		std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator2D>();
-
 
 		// Animation initialization
 		data.animation = std::make_unique<Animation>(
 			std::move(path),   // AnimationPath
 			std::move(points), // Inheritance of FractalGenerator::Points
 			std::move(pixels)  // Inheritance of FractalGenerator::Pixels
-			// TODO: post_process_stack
+							   // TODO: post_process_stack
 		);
 	}
 	else if (chosenDimension == 3)
@@ -191,7 +193,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 		for (int i = 0; i < _fractalControls.size(); i++)
 		{
 			std::vector<AffineTransformation_3D> transforms;
-			try {
+			try
+			{
 				transforms = _fractalControls[i].exportTransforms3D();
 			}
 			catch (BadUserInput except)
@@ -216,7 +219,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
 		}
 
-		if (gatheredFractals < 2) return; // Nie da sie zrobic animacji z jednego fraktala
+		if (gatheredFractals < 2)
+			return; // Nie da sie zrobic animacji z jednego fraktala
 
 		double x, y, z;
 		m_textCtrl_X->GetValue().ToDouble(&x);
@@ -224,24 +228,16 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 		m_textCtrl_Z->GetValue().ToDouble(&z);
 
 		std::unique_ptr<FractalGenerator::Points> points = std::make_unique<fractal_factory::PointsGenerator3D>(iterations); // w tym wypadku argumentem jest ilosc iteracji
-		std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator3D>(x,y,z);
-
+		std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<fractal_factory::PixelsGenerator3D>(x, y, z);
 
 		// Animation initialization
 		data.animation = std::make_unique<Animation>(
 			std::move(path),   // AnimationPath
 			std::move(points), // Inheritance of FractalGenerator::Points
 			std::move(pixels)  // Inheritance of FractalGenerator::Pixels
-			// TODO: post_process_stack
+							   // TODO: post_process_stack
 		);
 	}
-
-	
-
-	_timer->Start(100);
-	_uiState = RENDERING;
-	m_renderbutton->Disable();
-	m_button_beginAnimation->Disable();
 
 	try
 	{
@@ -252,6 +248,11 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 		std::cerr << e.what() << '\n';
 	}
 
+	_timer->Start(100);
+	_uiState = RENDERING;
+	// m_renderbutton->Disable();
+	m_button_beginAnimation->Disable();
+
 	framesdrawer.draw(30, FramesDrawer::Mode::Render);
 	event.Skip();
 }
@@ -259,38 +260,38 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 void MainWindow::onFramesText(wxCommandEvent &event)
 {
 
-	int val; 
+	int val;
 	if (m_frames->GetValue().ToInt(&val))
-	_fractalControls[_currentFractal]._framesToNext = val;
+		_fractalControls[_currentFractal]._framesToNext = val;
 }
 
-void MainWindow::onTimer(wxCommandEvent& event)
+void MainWindow::onTimer(wxCommandEvent &event)
 {
-	int ready = data.animation->n_frames_ready();
 	int total = data.animation->n_frames();
 
 	switch (_uiState)
 	{
-		case AWAITING: break;
-		case RENDERING:
-			
-			m_progress->SetValue( (static_cast<float>(ready) / total) * 100.0 );
-
-			if (ready == total)
-			{
-				_uiState = AWAITING;
-				m_button_beginAnimation->Enable();
-				m_renderbutton->Enable();
-				_timer->Stop();
-			}
-			
-
-			break;
-		case PLAYING:  break;
+	case AWAITING:
+		break;
+	case RENDERING:
+		m_progress->SetValue((static_cast<float>(framesdrawer.current_frame) / total) * 100.0);
+		if (framesdrawer.current_frame == total)
+		{
+			_uiState = AWAITING;
+			m_button_beginAnimation->Enable();
+			m_renderbutton->Enable();
+			_timer->Stop();
+		}
+		break;
+	case PLAYING:
+		m_progress->SetValue((static_cast<float>(framesdrawer.current_frame) / total) * 100.0);
+		if (framesdrawer.current_frame == total)
+		{
+			_uiState = AWAITING;
+			m_button_beginAnimation->Enable();
+			m_renderbutton->Enable();
+			_timer->Stop();
+		}
+		break;
 	}
-}
-
-void MainWindow::animationUnlock()
-{
-	_uiState = AWAITING; m_renderbutton->Enable(); m_button_beginAnimation->Enable();
 }

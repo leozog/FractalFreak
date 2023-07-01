@@ -1,19 +1,28 @@
 #pragma once
 
-#include "MyWindow.h"
-#include "FractalControls.h"
-#include <wx/image.h>
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
-#include "AppData.h"
+#include <wx/image.h>
 #include <wx/filedlg.h>
+
+#include "MyWindow.h"
+#include "FractalControls.h"
+
+#include "AppData.h"
+#include "ff/Animation.h"
+#include "FractalsDefinitions.h"
+
+#include "ui/FramesDrawer.h"
+
 #include <fstream>
 #include <sstream>
-#include "ui/FramesDrawer.h"
-#include "fd/FractalFactory.h"
+#include <functional>
 
-enum AnimationState {
-	AWAITING, RENDERING, PLAYING
+enum AnimationState
+{
+	AWAITING,
+	RENDERING,
+	PLAYING
 };
 
 class MainWindow : public MyWindow
@@ -28,7 +37,6 @@ private:
 
 	AnimationState _uiState;
 
-
 protected:
 	void fractal_left_button(wxCommandEvent &event) override;
 	void fractal_right_button(wxCommandEvent &event) override;
@@ -37,20 +45,18 @@ protected:
 	void onGenerateButton(wxCommandEvent &event) override;
 	void onFileLoad(wxCommandEvent &event) override;
 	void onFramesText(wxCommandEvent &event) override;
-	void onTimer(wxCommandEvent& event) override;
-	void onSaveAs(wxCommandEvent& event) override;
+	void onTimer(wxCommandEvent &event) override;
+	void onSaveAs(wxCommandEvent &event) override;
 
 	void setDimension(int newDimension, bool safe = true);
 	void updateFractalUI();
 
 public:
 	MainWindow(wxWindow *parent, AppData &_dataRef);
-	~MainWindow()
-	{
+	~MainWindow(){
 
 	};
 
 	void onTransformDelete(wxCommandEvent &event) override;
 	void onTransformAdd(wxCommandEvent &event) override;
-	void animationUnlock();
 };

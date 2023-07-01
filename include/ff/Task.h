@@ -39,11 +39,12 @@ class Task_list
 private:
     std::vector<std::unique_ptr<Task>> tasks;
     bool stop;
+    mutable std::shared_mutex outside_access_mx;
 
 public:
     Task_list();
     ~Task_list();
-    void add(std::unique_ptr<Task> &&tsk) { tasks.push_back(std::move(tsk)); }
+    void add(std::unique_ptr<Task> &&tsk);
     void clear();
     size_t size() const;
     const Task &operator[](size_t i) const;

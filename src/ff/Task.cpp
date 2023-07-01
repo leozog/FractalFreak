@@ -37,8 +37,15 @@ Task_list::~Task_list()
     clear();
 }
 
+void Task_list::add(std::unique_ptr<Task> &&tsk)
+{
+    const std::lock_guard lock(outside_access_mx);
+    tasks.push_back(std::move(tsk));
+}
+
 void Task_list::clear()
 {
+    const std::lock_guard lock(outside_access_mx);
     stop = true;
     while (true)
     {
@@ -57,20 +64,24 @@ void Task_list::clear()
 
 size_t Task_list::size() const
 {
+    const std::lock_guard lock(outside_access_mx);
     return tasks.size();
 }
 
 const Task &Task_list::operator[](size_t i) const
 {
+    const std::lock_guard lock(outside_access_mx);
     return *tasks[i];
 }
 Task &Task_list::operator[](size_t i)
 {
+    const std::lock_guard lock(outside_access_mx);
     return *tasks[i];
 }
 
 void Task_list::process(int32_t n_threads)
 {
+    const std::lock_guard lock(outside_access_mx);
     if (n_threads < 0)
         n_threads = std::thread::hardware_concurrency();
     for (int i = 0; i < n_threads; i++) // invoking the threads
