@@ -21,12 +21,15 @@ namespace AffineFractal
 	{
 	private:
 		std::vector<AffineTransformation_3D> transformations;
+		glm::vec3 cam_pos;
 
 	public:
-		Parameters(const std::initializer_list<AffineTransformation_3D> &transformations_ilist) : transformations{transformations_ilist} {}
-		Parameters(const std::vector<AffineTransformation_3D> &transformations_ilist) : transformations(transformations_ilist) {}
+		Parameters(glm::vec3 cam_pos, const std::initializer_list<AffineTransformation_3D> &transformations_ilist) : cam_pos{cam_pos}, transformations{transformations_ilist} {}
+		Parameters(glm::vec3 cam_pos, const std::vector<AffineTransformation_3D> &transformations_ilist) : cam_pos{cam_pos}, transformations(transformations_ilist) {}
 
 		std::vector<AffineTransformation_3D> &get_transformations() { return transformations; }
+
+		glm::mat4 get_transformation_matrix();
 
 		// return copy of self
 		std::unique_ptr<FractalParameters> copy() const override;

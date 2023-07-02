@@ -141,6 +141,7 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 
 	int gatheredFractals = 0;
 
+	// cammera x, y, z
 	double x, y, z;
 	m_textCtrl_X->GetValue().ToDouble(&x);
 	m_textCtrl_Y->GetValue().ToDouble(&y);
@@ -168,12 +169,12 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			{
 				if (i != 0)
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), _fractalControls[i - 1]._framesToNext / fps);
 				}
 
 				else
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(transforms)), 0);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), 0);
 				}
 				gatheredFractals++;
 			}
@@ -203,11 +204,11 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			{
 				if (i != 0)
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(transforms)), _fractalControls[i - 1]._framesToNext / fps);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), _fractalControls[i - 1]._framesToNext / fps);
 				}
 				else
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(transforms)), 0);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), 0);
 				}
 				gatheredFractals++;
 			}
@@ -220,7 +221,7 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	}
 
 	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<AffineFractal::PointsGenerator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
-	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<PointScatter>(1000);						 // z_shadow
+	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<PointScatter>(1);							 // z_shadow
 
 	// Animation initialization
 	data.animation = std::make_unique<Animation>(

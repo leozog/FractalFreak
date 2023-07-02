@@ -1,66 +1,11 @@
 #include "fd/PointScatter.h"
 
+#include <iostream> //usunac
+
 void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &points, wxImage &color, std::vector<float> &depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const
 {
 	if (points.empty() || !color.IsOk())
 		return;
-
-	/*std::vector<Color> pixelColors;
-
-	// Make the matrix for casting
-
-	double n, r, l, t, b, f;
-
-	double ratio = 1;
-	t = 1;	// top
-	b = -1; // bottom
-	l = -1; // left
-	r = 1;	// right
-
-	if (bitmapWidth > bitmapHeight)
-	{
-		ratio = static_cast<double>(bitmapWidth) / bitmapHeight;
-		l = l * ratio;
-		r = r * ratio;
-	}
-	else
-	{
-		ratio = static_cast<double>(bitmapHeight) / bitmapWidth;
-		t = t * ratio;
-		b = b * ratio;
-	}
-
-	f = 100; // far plane
-	n = 0.1; // near plane
-
-	// na cele tego projektu nie wiemy o istnieniu glm::perspective!
-
-	// glm::mat4 ortho_cast(n / 4, 0, 0, 0, 0, n / b, 0, 0, 0, 0, f / (f - n), 1, 0, 0, -f * n / (f - n), 0);
-	glm::mat4 ortho_cast(2 * n, 0, 0, 0, 0, 2 * n / (t - b), 0, 0, (r + l) / (r - l), (t + b) / (t - b), -(f + n) / (f - n), -1, 0, 0, (-2 * f * n) / (f - n), 0);
-	glm::mat4 scale(2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2);
-
-	ortho_cast = ortho_cast * scale; //* inversion * rotation
-
-	std::vector<glm::vec4> drawablePoints;
-	drawablePoints.reserve(points.size());
-
-	// First we need to perform math on the points
-	for (auto &fpoint : points)
-	{
-		Point *point = dynamic_cast<Point *>(fpoint.get());
-
-		// We need to cast the stuff!
-		// First make a civilised 4 vector
-		glm::vec4 glm_point(point->x - cameraX, point->y - cameraY, point->z - cameraZ, 1);
-
-		// https://static.wikia.nocookie.net/afbe0a28-af5a-4073-9579-1b56c0a33e22
-
-		// Then we apply math wizardry (often confused with Algebra)
-
-		glm_point = ortho_cast * glm_point;
-
-		drawablePoints.push_back(glm_point);
-	}*/
 
 	// find max and min values of x, y, z
 
@@ -68,6 +13,8 @@ void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &poin
 	double x_max = points[0]->pos.x;
 	double y_min = points[0]->pos.y;
 	double y_max = points[0]->pos.y;
+	double z_min = points[0]->pos.z;
+	double z_max = points[0]->pos.z;
 	uint32_t color_max = 0;
 
 	for (auto &point : points)
@@ -83,6 +30,10 @@ void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &poin
 			y_min = point->pos.y;
 		if (y_max < point->pos.y)
 			y_max = point->pos.y;
+		if (z_min > point->pos.z)
+			z_min = point->pos.z;
+		if (z_max < point->pos.z)
+			z_max = point->pos.z;
 
 		auto drawablePoint = dynamic_cast<PointScatter::Point *>(point.get());
 		if (drawablePoint->color > color_max)
@@ -103,7 +54,7 @@ void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &poin
 		if (0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)
 		{
 			uint8_t red, green, blue;
-			hslToRgb(red, green, blue, 360. / (color_max + 1) * drawablePoint->color, 0.9, std::max(0., 1. - drawablePoint->pos.z / z_shadow));
+			hslToRgb(red, green, blue, 1. / (color_max + 1) * drawablePoint->color, 1., std::max(0., 1. - (drawablePoint->pos.z - z_min) / (z_max - z_min) * z_shadow));
 
 			put_pixel(color, depth, bitmapX, bitmapY, drawablePoint->pos.z, PointScatter::Color(red, green, blue));
 		}
@@ -115,8 +66,9 @@ void PointScatter::put_pixel(wxImage &color, std::vector<float> &depth, uint32_t
 	uint32_t d = x + y * color.GetWidth();
 	if (depth[d] > z)
 	{
+		depth[d] = z;
 		unsigned char *p = color.GetData();
-		p += d;
+		p += d * 3;
 		p[0] = c.red;
 		p[1] = c.green;
 		p[2] = c.blue;
