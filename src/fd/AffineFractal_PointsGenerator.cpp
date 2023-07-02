@@ -1,7 +1,5 @@
 #include "fd/AffineFractal.h"
 
-#include <iostream>
-
 namespace AffineFractal
 {
 	std::vector<std::unique_ptr<FractalPoint>> PointsGenerator::calculate(const std::unique_ptr<FractalParameters> &param) const
@@ -10,7 +8,7 @@ namespace AffineFractal
 
 		std::vector<float> prob_sum = calcProbabilities(transformations);
 
-		glm::vec3 p(0, 0, 0);
+		glm::vec3 p(0., 0., 0.);
 		std::vector<std::unique_ptr<FractalPoint>> generated_points;
 		generated_points.reserve(points_per_frame);
 
@@ -48,9 +46,9 @@ namespace AffineFractal
 		glm::mat4 tmatrix = dynamic_cast<AffineFractal::Parameters *>(param.get())->get_transformation_matrix();
 		for (auto &point : generated_points)
 		{
-			glm::vec4 v(point->pos.x, point->pos.y, point->pos.z, 1.0f);
-			v = tmatrix * v;
-			point->pos = glm::vec3(v.y, v.x, v.z);
+			point->pos = tmatrix * glm::vec4(point->pos, 1.0f);
+			point->pos.x /= point->pos.z;
+			point->pos.y /= point->pos.z;
 		}
 
 		return generated_points;

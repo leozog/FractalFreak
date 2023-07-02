@@ -1,4 +1,5 @@
 #include "fd/AffineFractal.h"
+#include <cmath>
 
 namespace AffineFractal
 {
@@ -37,10 +38,13 @@ namespace AffineFractal
         cam_pos *= b;
     }
 
+#define GLM_FORCE_RADIANS
+
     glm::mat4 Parameters::get_transformation_matrix()
     {
-        glm::mat4 mTranslate = glm::translate(glm::mat4(1.0f), cam_pos);
-        glm::mat4 mProjection = glm::perspective(45.0f, 1.0f, 0.0f, 10.0f);
-        return mProjection * mTranslate;
+        glm::mat4 mTranslate = glm::translate(glm::mat4(1.0f), -cam_pos);
+        glm::mat4 mRotation = lookAt(glm::vec3(0, 0, 0), -cam_pos, glm::vec3(0, 1, 0));
+        glm::mat4 mPerspective = glm::perspectiveFov(glm::radians(30.0f), 2.0f, 2.0f, 0.001f, 100.0f);
+        return mPerspective * mRotation * mTranslate;
     }
 }

@@ -24,10 +24,12 @@ private:
 		Color(uint8_t red, uint8_t green, uint8_t blue) : red(red), green(green), blue(blue) {}
 	};
 
+	uint32_t colors;
 	double z_shadow;
+	bool fit;
 
 public:
-	PointScatter(double z_shadow) : z_shadow{z_shadow} {}
+	PointScatter(uint32_t colors, double z_shadow, double fit) : colors{colors}, z_shadow{z_shadow}, fit{fit} {}
 	// draw points on bitmap
 	void render(const std::vector<std::unique_ptr<FractalPoint>> &points, wxImage &color, std::vector<float> &depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const override;
 

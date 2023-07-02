@@ -1,7 +1,5 @@
 #include "fd/PointScatter.h"
 
-#include <iostream> //usunac
-
 void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &points, wxImage &color, std::vector<float> &depth, uint32_t bitmapWidth, uint32_t bitmapHeight) const
 {
 	if (points.empty() || !color.IsOk())
@@ -9,35 +7,40 @@ void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &poin
 
 	// find max and min values of x, y, z
 
-	double x_min = points[0]->pos.x;
-	double x_max = points[0]->pos.x;
-	double y_min = points[0]->pos.y;
-	double y_max = points[0]->pos.y;
-	double z_min = points[0]->pos.z;
-	double z_max = points[0]->pos.z;
-	uint32_t color_max = 0;
+	double x_min = -1;
+	double x_max = 1;
+	double y_min = -1;
+	double y_max = 1;
+	double z_min = 0;
+	double z_max = 1;
 
-	for (auto &point : points)
+	if (fit)
 	{
-		if (point->pos.z < 0)
-			continue;
+		x_min = points[0]->pos.x;
+		x_max = points[0]->pos.x;
+		y_min = points[0]->pos.y;
+		y_max = points[0]->pos.y;
+		z_min = points[0]->pos.z;
+		z_max = points[0]->pos.z;
 
-		if (x_min > point->pos.x)
-			x_min = point->pos.x;
-		if (x_max < point->pos.x)
-			x_max = point->pos.x;
-		if (y_min > point->pos.y)
-			y_min = point->pos.y;
-		if (y_max < point->pos.y)
-			y_max = point->pos.y;
-		if (z_min > point->pos.z)
-			z_min = point->pos.z;
-		if (z_max < point->pos.z)
-			z_max = point->pos.z;
+		for (auto &point : points)
+		{
+			if (point->pos.z < 0)
+				continue;
 
-		auto drawablePoint = dynamic_cast<PointScatter::Point *>(point.get());
-		if (drawablePoint->color > color_max)
-			color_max = drawablePoint->color;
+			if (x_min > point->pos.x)
+				x_min = point->pos.x;
+			if (x_max < point->pos.x)
+				x_max = point->pos.x;
+			if (y_min > point->pos.y)
+				y_min = point->pos.y;
+			if (y_max < point->pos.y)
+				y_max = point->pos.y;
+			if (z_min > point->pos.z)
+				z_min = point->pos.z;
+			if (z_max < point->pos.z)
+				z_max = point->pos.z;
+		}
 	}
 
 	for (auto &point : points)
@@ -48,13 +51,16 @@ void PointScatter::render(const std::vector<std::unique_ptr<FractalPoint>> &poin
 		auto drawablePoint = dynamic_cast<PointScatter::Point *>(point.get());
 
 		int bitmapX = (drawablePoint->pos.x - x_min) / (x_max - x_min) * bitmapWidth / 1.5 + bitmapWidth / 6;
-		int bitmapY = (1 - ((drawablePoint->pos.y - y_min) / (y_max - y_min))) * bitmapHeight / 1.5 + bitmapHeight / 6;
-
+		int bitmapY = (1 - (drawablePoint->pos.y - y_min) / (y_max - y_min)) * bitmapHeight / 1.5 + bitmapHeight / 6;
 		// if pixel is inside bitmap, draw it
 		if (0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)
 		{
 			uint8_t red, green, blue;
-			hslToRgb(red, green, blue, 1. / (color_max + 1) * drawablePoint->color, 1., std::max(0., 1. - (drawablePoint->pos.z - z_min) / (z_max - z_min) * z_shadow));
+
+			if (z_max - z_min)
+				hslToRgb(red, green, blue, 1. / colors * drawablePoint->color, 1., std::max(0., 0.50 - (drawablePoint->pos.z - z_min) / (z_max - z_min) * z_shadow));
+			else
+				hslToRgb(red, green, blue, 1. / colors * drawablePoint->color, 1., 0.50);
 
 			put_pixel(color, depth, bitmapX, bitmapY, drawablePoint->pos.z, PointScatter::Color(red, green, blue));
 		}

@@ -11,10 +11,6 @@
 #include <vector>
 #include <memory>
 
-// #include <typeinfo>
-// #include <typeindex>
-// #include <iostream>
-
 namespace AffineFractal
 {
 	class Parameters : public FractalParameters

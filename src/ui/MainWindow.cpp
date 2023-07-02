@@ -147,6 +147,8 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	m_textCtrl_Y->GetValue().ToDouble(&y);
 	m_textCtrl_Z->GetValue().ToDouble(&z);
 
+	uint32_t n_of_colros = 0;
+	double z_shadow = 0;
 	if (chosenDimension == 2)
 	{
 		// Buduje wektor Transform_2D eksportuj�c dane z UI
@@ -169,17 +171,19 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			{
 				if (i != 0)
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), _fractalControls[i - 1]._framesToNext / fps);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 3), transforms)), _fractalControls[i - 1]._framesToNext / fps);
 				}
-
 				else
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(x, y, z), transforms)), 0);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 3), transforms)), 0);
 				}
 				gatheredFractals++;
 			}
 			else
 				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
+
+			if (transforms.size() > n_of_colros)
+				n_of_colros = transforms.size();
 		}
 
 		if (gatheredFractals < 2)
@@ -214,6 +218,11 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			}
 			else
 				break; // Ostatni fraktal w UI bez transformacji to koniec animacji, lub jezeli skonczly sie fraktale
+
+			if (transforms.size() > n_of_colros)
+				n_of_colros = transforms.size();
+
+			z_shadow = 0.75;
 		}
 
 		if (gatheredFractals < 2)
@@ -221,7 +230,7 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	}
 
 	std::unique_ptr<FractalGenerator::Points> points = std::make_unique<AffineFractal::PointsGenerator>(iterations); // w tym wypadku argumentem jest ilosc iteracji
-	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<PointScatter>(1);							 // z_shadow
+	std::unique_ptr<FractalGenerator::Pixels> pixels = std::make_unique<PointScatter>(n_of_colros, z_shadow, true);	 // n_of_colros, z_shadow, fit
 
 	// Animation initialization
 	data.animation = std::make_unique<Animation>(
