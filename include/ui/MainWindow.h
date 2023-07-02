@@ -4,6 +4,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/image.h>
 #include <wx/filedlg.h>
+#include <wx/dirdlg.h>
 
 #include "MyWindow.h"
 #include "FractalControls.h"
