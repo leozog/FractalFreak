@@ -2,7 +2,7 @@
 
 FramesDrawer::FramesDrawer(AppData &data, wxPanel *m_fractalPanel) : data{data}, m_fractalPanel{m_fractalPanel}, mode{Mode::Idle}, current_frame{0}, stop{false}
 {
-    drawing_thread = std::thread(FramesDrawer::draw_loop, this);
+    drawing_thread = std::thread(&FramesDrawer::draw_loop, this);
 }
 
 FramesDrawer::~FramesDrawer()

@@ -114,10 +114,6 @@ namespace fractal_factory
 			b = b * ratio;
 		}
 
-		
-
-		
-
 		f = 100; // far plane
 		n = 0.1; // near plane
 
@@ -186,22 +182,36 @@ namespace fractal_factory
 		}
 		//TODO scaling?
 
-		std::sort(drawablePoints.begin(), drawablePoints.end(), [](const glm::vec4& a, const glm::vec4& b) -> bool {return a.z > b.z; });
-
+		std::vector<double> z_buffer(bitmapHeight * bitmapWidth, 100000000);
 
 		for (auto& point : drawablePoints)
 		{
-			if (point.z <= 0 || point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1) 
-				continue; // nie rysujemy tego czego nie widac
+			
 
-			int bitmapX = (point.x - x_min) / (x_max - x_min) * bitmapWidth/1.5 + bitmapWidth / 6;
-			int bitmapY = (1 - ((point.y - y_min) / (y_max - y_min))) * bitmapHeight/1.5 + bitmapHeight / 6;
+			if (point.z <= 0 || point.x > 1 || point.x < -1 || point.y > 1 || point.y < -1) 
+				continue; // nie rysujemy tego czego nie widac w oczywisty sposob
+
+			int bitmapX = (point.x - x_min) / (x_max - x_min) * bitmapWidth / 1.5 + bitmapWidth / 6;
+			int bitmapY = (1 - ((point.y - y_min) / (y_max - y_min))) * bitmapHeight / 1.5 + bitmapHeight / 6;
+
+			if (!(0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)) continue;
+
+			if (z_buffer[(bitmapY * bitmapX) + bitmapX] < point.z)
+			{
+				continue;
+			}
+			else
+			{
+				z_buffer[(bitmapY * bitmapX) + bitmapX] = point.z;
+			}
+
+			// Nie rysujemy tego, co jest przyslonione
 
 			float lightness = 1 - (point.z / z_max);
 
 			// if pixel is inside bitmap, draw it
-			if (0 <= bitmapX && bitmapX < bitmapWidth && 0 <= bitmapY && bitmapY < bitmapHeight)
-				bitmap.SetRGB(bitmapX, bitmapY, lightness * pixelColors[point.w].red, lightness * pixelColors[point.w].green, lightness * pixelColors[point.w].blue);
+			
+			bitmap.SetRGB(bitmapX, bitmapY, lightness * pixelColors[point.w].red, lightness * pixelColors[point.w].green, lightness * pixelColors[point.w].blue);
 
 		}
 	}
