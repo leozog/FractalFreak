@@ -26,4 +26,6 @@ public:
         uint32_t W, uint32_t H);
     void process() override;                  // renders the frame
     std::shared_ptr<wxImage> get_img() const; // returns a wxwidgets wxImage (copy of color)
+private:
+    std::vector<float> generate_depth(uint32_t W, uint32_t H);
 };

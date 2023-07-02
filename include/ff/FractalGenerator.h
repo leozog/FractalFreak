@@ -15,6 +15,6 @@ namespace FractalGenerator
     class Pixels
     {
     public:
-        virtual void render(const std::vector<std::unique_ptr<FractalPoint>> &points, wxImage &color, wxImage &depth, uint32_t W, uint32_t H) const = 0;
+        virtual void render(const std::vector<std::unique_ptr<FractalPoint>> &points, wxImage &color, std::vector<float> &depth, uint32_t W, uint32_t H) const = 0;
     };
 }
