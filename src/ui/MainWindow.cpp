@@ -16,13 +16,11 @@ MainWindow::MainWindow(wxWindow *parent, AppData &dataRef) : MyWindow(parent), d
 void MainWindow::onTransformDelete(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].HandleTransformDestroy(event.GetId());
-	event.Skip();
 }
 
 void MainWindow::onTransformAdd(wxCommandEvent &event)
 {
 	_fractalControls[_currentFractal].AddLine();
-	event.Skip();
 }
 
 void MainWindow::fractal_left_button(wxCommandEvent &event)
@@ -255,7 +253,6 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 	m_button_beginAnimation->Disable();
 
 	framesdrawer.draw(30, FramesDrawer::Mode::Render);
-	event.Skip();
 }
 
 void MainWindow::onFramesText(wxCommandEvent &event)
