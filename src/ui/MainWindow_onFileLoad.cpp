@@ -133,3 +133,8 @@ void MainWindow::onSaveAs(wxCommandEvent& event)
 	}
 	output.close();
 }
+
+void MainWindow::onExport(wxCommandEvent& event)
+{
+	
+}

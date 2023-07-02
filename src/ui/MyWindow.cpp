@@ -180,6 +180,10 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	m_menu_saveas = new wxMenuItem(m_filemenu, wxID_ANY, wxString(wxT("Save As...")), wxEmptyString, wxITEM_NORMAL);
 	m_filemenu->Append(m_menu_saveas);
 
+	wxMenuItem* m_menu_export;
+	m_menu_export = new wxMenuItem(m_filemenu, wxID_ANY, wxString(wxT("Export...")), wxEmptyString, wxITEM_NORMAL);
+	m_filemenu->Append(m_menu_export);
+
 	m_menubar1->Append(m_filemenu, wxT("File"));
 
 	this->SetMenuBar(m_menubar1);
@@ -201,6 +205,7 @@ MyWindow::MyWindow(wxWindow *parent, wxWindowID id, const wxString &title, const
 	m_itertxt->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(MyWindow::onIterText), NULL, this);
 	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyWindow::onFileLoad), this, m_menu_load->GetId());
 	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyWindow::onSaveAs), this, m_menu_saveas->GetId());
+	m_filemenu->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MyWindow::onExport), this, m_menu_export->GetId());
 
 	_timer = new wxTimer();
 	_timer->Connect(wxEVT_TIMER, wxCommandEventHandler(MyWindow::onTimer), NULL, this);
