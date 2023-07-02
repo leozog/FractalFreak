@@ -13,7 +13,7 @@ Frame::Frame(
 void Frame::process()
 {
     std::vector<std::unique_ptr<FractalPoint>> points = points_generator->calculate(param);
-    wxImage depth(W, H);
+    std::vector<float> generate_depth(W, H);
     pixels_generator->render(points, *color, depth, W, H);
     /*for (auto &pp : post_process_stack)
         pp(color, depth);*/
@@ -22,4 +22,9 @@ void Frame::process()
 std::shared_ptr<wxImage> Frame::get_img() const
 {
     return color;
+}
+
+std::vector<float> generate_depth(uint32_t W, uint32_t H)
+{
+    return std::vector<float>(W * H, );
 }
