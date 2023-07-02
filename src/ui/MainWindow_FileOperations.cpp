@@ -7,7 +7,7 @@ void MainWindow::onFileLoad(wxCommandEvent &event)
 		openFileDialog(this, _("Otworz plik tekstowy z fraktalem"), "", "",
 					   "TXT z fraktalem (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
-		return; // the user changed idea...
+		return;
 
 	std::ifstream input;
 	input.open(openFileDialog.GetPath().ToStdString());
@@ -118,7 +118,7 @@ void MainWindow::onSaveAs(wxCommandEvent& event)
 		openFileDialog(this, _("Zapisz plik tekstowy z fraktalem"), "", "",
 			"TXT z fraktalem (*.txt)|*.txt", wxFD_SAVE);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
-		return; // the user changed idea...
+		return;
 
 	std::ofstream output;
 	output.open(openFileDialog.GetPath().ToStdString());
@@ -132,4 +132,26 @@ void MainWindow::onSaveAs(wxCommandEvent& event)
 		output << _fractalControls[i].to_string() << "\n";
 	}
 	output.close();
+}
+
+void MainWindow::onExport(wxCommandEvent& event)
+{
+	wxDirDialog dlg(NULL, "Wybierz folder do eksportowania", "",
+		wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+	if (dlg.ShowModal() == wxID_CANCEL)
+		return;
+
+	wxString path = dlg.GetPath();
+
+	if (data.animation->n_frames_ready())
+	{
+		for (int i = 0; i < data.animation->n_frames_ready(); i++)
+		{
+			std::shared_ptr<wxImage> frameToExport = data.animation->get_frame_x(i);
+
+			wxString fileName = wxString::Format("\\%d.bmp", i);
+
+			frameToExport->SaveFile(path + fileName, wxBITMAP_TYPE_BMP);
+		}
+	}
 }

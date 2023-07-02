@@ -82,6 +82,7 @@ protected:
 	virtual void onFileLoad(wxCommandEvent& event) { event.Skip(); }
 	virtual void onSaveAs(wxCommandEvent& event) { event.Skip(); }
 	virtual void onTimer(wxCommandEvent& event) { event.Skip(); }
+	virtual void onExport(wxCommandEvent& event) { event.Skip(); }
 
 public:
 	MyWindow(wxWindow *parent, wxWindowID id = wxID_ANY, const wxString &title = wxEmptyString, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(1000, 500), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);

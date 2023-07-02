@@ -4,6 +4,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/image.h>
 #include <wx/filedlg.h>
+#include <wx/dirdlg.h>
 
 #include "MyWindow.h"
 #include "FractalControls.h"
@@ -47,6 +48,7 @@ protected:
 	void onFramesText(wxCommandEvent &event) override;
 	void onTimer(wxCommandEvent &event) override;
 	void onSaveAs(wxCommandEvent &event) override;
+	void onExport(wxCommandEvent& event) override;
 
 	void setDimension(int newDimension, bool safe = true);
 	void updateFractalUI();
