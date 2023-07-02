@@ -141,13 +141,17 @@ void MainWindow::onExport(wxCommandEvent& event)
 	if (dlg.ShowModal() == wxID_CANCEL)
 		return;
 
+	wxString path = dlg.GetPath();
+
 	if (data.animation->n_frames_ready())
 	{
 		for (int i = 0; i < data.animation->n_frames_ready(); i++)
 		{
 			std::shared_ptr<wxImage> frameToExport = data.animation->get_frame_x(i);
 
+			wxString fileName = wxString::Format("\\%d.bmp", i);
 
+			frameToExport->SaveFile(path + fileName, wxBITMAP_TYPE_BMP);
 		}
 	}
 }
