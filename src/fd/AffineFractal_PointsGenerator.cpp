@@ -42,8 +42,15 @@ namespace AffineFractal
 			}
 		}
 
+		glm::vec3 target(0, 0, 0);
+		for (auto &point : generated_points)
+		{
+			target += point->pos;
+		}
+		target /= points_per_frame;
+
 		// Applying transformation matrix to all generated points
-		glm::mat4 tmatrix = dynamic_cast<AffineFractal::Parameters *>(param.get())->get_transformation_matrix();
+		glm::mat4 tmatrix = dynamic_cast<AffineFractal::Parameters *>(param.get())->get_transformation_matrix(target);
 		for (auto &point : generated_points)
 		{
 			point->pos = tmatrix * glm::vec4(point->pos, 1.0f);

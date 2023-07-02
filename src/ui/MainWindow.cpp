@@ -171,11 +171,11 @@ void MainWindow::onGenerateButton(wxCommandEvent &event)
 			{
 				if (i != 0)
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 3), transforms)), _fractalControls[i - 1]._framesToNext / fps);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 1000), transforms)), _fractalControls[i - 1]._framesToNext / fps);
 				}
 				else
 				{
-					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 3), transforms)), 0);
+					path->add(std::make_unique<AffineFractal::Parameters>(AffineFractal::Parameters(glm::vec3(0, 0, 1000), transforms)), 0);
 				}
 				gatheredFractals++;
 			}

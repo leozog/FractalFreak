@@ -25,7 +25,7 @@ namespace AffineFractal
 
 		std::vector<AffineTransformation_3D> &get_transformations() { return transformations; }
 
-		glm::mat4 get_transformation_matrix();
+		glm::mat4 get_transformation_matrix(glm::vec3 target);
 
 		// return copy of self
 		std::unique_ptr<FractalParameters> copy() const override;
